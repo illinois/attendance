@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "author": "Kevin Wang <kevin@kevinwang.com>",
     "scripts": {
-        "watch": "watchify client/main.jsx -o public/app.js -v -t reactify",
+        "watch": "watchify client/main.jsx -o public/app.js -v -d -t reactify",
         "build": "browserify client/main.jsx -o public/app.js -t reactify",
         "start": "npm run watch & nodemon server.js"
     },
