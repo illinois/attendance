@@ -2,6 +2,8 @@
 
 var React = require('react');
 
+var Header = require('./header.jsx');
+
 /**
  * Home view
  */
@@ -11,7 +13,10 @@ var HomeView = React.createClass({
     },
 
     render: function() {
-        return <div>Home view</div>;
+        return <div>
+            <Header handleNav={this.props.handleNav} />
+            Home view
+        </div>;
     }
 });
 

@@ -1,10 +1,9 @@
 /** @jsx React.DOM */
 
 var Backbone = require('backbone');
-Backbone.$ = require('jquery');
+var $ = Backbone.$ = require('jquery');
 var React = require('react');
 
-var Header = require('./header.jsx');
 var HomeView = require('./home-view.jsx');
 var LoginView = require('./login-view.jsx');
 
@@ -16,7 +15,8 @@ var LoginView = require('./login-view.jsx');
 var App = React.createClass({
     getInitialState: function() {
         return {
-            view: null
+            view: null,
+            authenticated: false
         };
     },
 
@@ -36,12 +36,30 @@ var App = React.createClass({
                 self.setState({
                     view: <LoginView
                         handleNav={self.handleNav}
-                        navigateTo={self.navigateTo} />
+                        navigateTo={self.navigateTo}
+                        login={self.login} />
                 });
             }
         });
         this.router = new Router();
         Backbone.history.start({pushState: true});
+        this.getSession();
+    },
+
+    login: function() {
+        this.setState({authenticated: true});
+        this.navigateTo('/');
+    },
+
+    getSession: function() {
+        $.get('/api/session', function() {
+            console.log('success');
+            this.setState({authenticated: true});
+        }.bind(this))
+        .fail(function() {
+            console.log('false');
+            this.setState({authenticated: false});
+        }.bind(this));
     },
 
     // onClick handler for <a> tags
@@ -56,7 +74,6 @@ var App = React.createClass({
 
     render: function() {
         return <div>
-            <Header handleNav={this.handleNav} />
             {this.state.view}
         </div>;
     }

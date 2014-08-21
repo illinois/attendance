@@ -9,7 +9,8 @@ var $ = require('jquery');
 var LoginView = React.createClass({
     propTypes: {
         handleNav: React.PropTypes.func.isRequired,
-        navigateTo: React.PropTypes.func.isRequired
+        navigateTo: React.PropTypes.func.isRequired,
+        login: React.PropTypes.func.isRequired
     },
 
     getInitialState: function() {
@@ -44,7 +45,7 @@ var LoginView = React.createClass({
         });
         request.done(function(msg) {
             console.log(msg);
-            this.props.navigateTo('/');
+            this.props.login();
         }.bind(this));
         request.fail(function(msg) {
             console.log(msg);
