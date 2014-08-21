@@ -34,7 +34,9 @@ var App = React.createClass({
             },
             login: function() {
                 self.setState({
-                    view: <LoginView handleNav={self.handleNav} />
+                    view: <LoginView
+                        handleNav={self.handleNav}
+                        navigateTo={self.navigateTo} />
                 });
             }
         });
@@ -42,9 +44,14 @@ var App = React.createClass({
         Backbone.history.start({pushState: true});
     },
 
+    // onClick handler for <a> tags
     handleNav: function(e) {
-        this.router.navigate(e.currentTarget.pathname, {trigger: true});
+        this.navigateTo(e.currentTarget.pathname);
         return false;
+    },
+
+    navigateTo: function(path) {
+        this.router.navigate(path, {trigger: true});
     },
 
     render: function() {
