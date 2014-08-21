@@ -1,8 +1,11 @@
-build:
+build: install
 	@npm build
 
-serve:
+serve: install
 	@npm start
+
+install:
+	@npm install
 
 clean:
 	@rm -f public/app.js
