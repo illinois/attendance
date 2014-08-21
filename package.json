@@ -5,7 +5,8 @@
     "scripts": {
         "watch": "watchify client/main.jsx -o public/app.js -v -d -t reactify",
         "build": "browserify client/main.jsx -o public/app.js -t reactify",
-        "start": "npm run watch & nodemon server.js"
+        "start": "npm run watch & nodemon server.js",
+        "lint": "jsxhint *.js client"
     },
     "dependencies": {
         "backbone": "1.1.x",
@@ -16,5 +17,8 @@
         "react": "0.11.x",
         "reactify": "0.14.x",
         "watchify": "1.0.x"
+    },
+    "devDependencies": {
+        "jsxhint": "0.4.x"
     }
 }
