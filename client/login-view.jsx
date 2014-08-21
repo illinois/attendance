@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var $ = require('jquery');
 
 /**
  * Login view
@@ -33,11 +34,22 @@ var LoginView = React.createClass({
 
     handleLogin: function() {
         this.setState({disabled: true});
-        console.log(this.state.username);
-        console.log(this.state.password);
-        setTimeout(function() {
+        var request = $.ajax({
+            type: 'POST',
+            url: '/api/session',
+            data: {
+                username: this.state.username + '@illinois.edu',
+                password: this.state.password
+            }
+        });
+        request.done(function(msg) {
+            console.log(msg);
             this.props.navigateTo('/');
-        }.bind(this), 1000);
+        }.bind(this));
+        request.fail(function(msg) {
+            console.log(msg);
+            this.setState({disabled: false});
+        }.bind(this));
         return false;
     },
 
