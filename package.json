@@ -6,7 +6,7 @@
         "watch": "watchify client/main.jsx -o public/app.js -v -d -t reactify",
         "build": "browserify client/main.jsx -o public/app.js -t reactify",
         "start": "npm run watch & nodemon server.js",
-        "lint": "jsxhint *.js client"
+        "lint": "jsxhint *.js models client"
     },
     "repository": {
         "type": "git",
