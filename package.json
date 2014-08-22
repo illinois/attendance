@@ -19,11 +19,14 @@
         "express": "4.8.x",
         "express-session": "1.7.x",
         "jquery": "2.1.x",
+        "mysql": "2.4.x",
         "nodemon": "1.2.x",
         "passport": "0.2.x",
         "passport-ldapbind": "0.1.x",
         "react": "0.11.x",
         "reactify": "0.14.x",
+        "sequelize": "1.7.x",
+        "underscore": "1.6.x",
         "watchify": "1.0.x"
     },
     "devDependencies": {
