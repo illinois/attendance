@@ -8,3 +8,15 @@ Setup instructions
 npm install
 make serve
 ```
+
+Testing
+-------
+```
+make test
+```
+
+Linting
+-------
+```
+make lint
+```
