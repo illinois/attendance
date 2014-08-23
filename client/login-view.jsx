@@ -15,7 +15,8 @@ var LoginView = React.createClass({
         return {
             username: '',
             password: '',
-            disabled: false
+            disabled: false,
+            message: ''
         };
     },
 
@@ -45,13 +46,17 @@ var LoginView = React.createClass({
             this.props.login(user);
         }.bind(this));
         request.fail(function() {
-            this.setState({disabled: false});
+            this.setState({
+                disabled: false,
+                message: 'Invalid NetID or password.'
+            });
         }.bind(this));
         return false;
     },
 
     render: function() {
         return <div>
+            {this.state.message}
             <form onSubmit={this.handleLogin}>
                 <label htmlFor="username">NetID</label>
                 <input
