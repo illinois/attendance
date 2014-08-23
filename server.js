@@ -7,6 +7,7 @@ var db = require('./models');
 
 var app = express();
 
+app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
 app.use(session({
     secret: 'not secret',
@@ -46,31 +47,16 @@ app.use(passport.session());
  *   password: Active Directory password
  */
 app.post('/api/session', passport.authenticate('ldapBind'), function(req, res) {
-    res.send({status: 'ok', user: req.user});
+    res.send(req.user);
 });
 
-app.get('/api/session', function(req, res) {
-    if (!req.user) {
-        res.status(401).end();
-        return;
-    }
-    res.send({status: 'ok', user: req.user});
-});
-
-app.get('/login', function(req, res) {
-    if (req.user) {
-        res.redirect('/');
-    } else {
-        res.sendFile('/views/index.html', {root: __dirname});
-    }
+app.delete('/api/session', function(req, res) {
+    req.logout();
+    res.status(204).end();
 });
 
 app.get('*', function(req, res) {
-    if (!req.user) {
-        res.redirect('/login');
-    } else {
-        res.sendFile('/views/index.html', {root: __dirname});
-    }
+    res.render('index', {user: req.user});
 });
 
 db

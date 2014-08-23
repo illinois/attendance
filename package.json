@@ -3,8 +3,8 @@
     "version": "0.0.1",
     "author": "Kevin Wang <kevin@kevinwang.com>",
     "scripts": {
-        "watch": "watchify client/main.jsx -o public/app.js -v -d -t reactify",
-        "build": "browserify client/main.jsx -o public/app.js -t reactify",
+        "watch": "watchify client/app.jsx -o public/app.js -v -d -s App -t reactify",
+        "build": "browserify client/app.jsx -o public/app.js -s App -t reactify",
         "start": "npm run watch & nodemon server.js",
         "lint": "jsxhint *.js models client"
     },
@@ -16,6 +16,7 @@
         "backbone": "1.1.x",
         "body-parser": "1.6.x",
         "browserify": "5.10.x",
+        "ejs": "1.0.x",
         "express": "4.8.x",
         "express-session": "1.7.x",
         "jquery": "2.1.x",

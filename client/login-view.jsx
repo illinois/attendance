@@ -8,8 +8,6 @@ var $ = require('jquery');
  */
 var LoginView = React.createClass({
     propTypes: {
-        handleNav: React.PropTypes.func.isRequired,
-        navigateTo: React.PropTypes.func.isRequired,
         login: React.PropTypes.func.isRequired
     },
 
@@ -43,12 +41,10 @@ var LoginView = React.createClass({
                 password: this.state.password
             }
         });
-        request.done(function(msg) {
-            console.log(msg);
-            this.props.login();
+        request.done(function(user) {
+            this.props.login(user);
         }.bind(this));
-        request.fail(function(msg) {
-            console.log(msg);
+        request.fail(function() {
             this.setState({disabled: false});
         }.bind(this));
         return false;

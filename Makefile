@@ -1,5 +1,5 @@
 build: install
-	@npm build
+	@npm run build
 
 serve: install
 	@npm start

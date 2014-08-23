@@ -1,8 +1,12 @@
 /** @jsx React.DOM */
 
+var React = require('react');
 var Backbone = require('backbone');
 var $ = Backbone.$ = require('jquery');
-var React = require('react');
+
+// Enable React Developer Tools
+window.React = React;
+window.$ = $;
 
 var HomeView = require('./home-view.jsx');
 var LoginView = require('./login-view.jsx');
@@ -13,14 +17,22 @@ var LoginView = require('./login-view.jsx');
  * Handles routing.
  */
 var App = React.createClass({
+    propTypes: {
+        initialUser: React.PropTypes.object
+    },
+
     getInitialState: function() {
         return {
             view: null,
-            authenticated: false
+            user: this.props.initialUser
         };
     },
 
-    componentWillMount: function() {
+    shouldComponentUpdate: function(nextProps, nextState) {
+        return nextState.view !== this.state.view;
+    },
+
+    initializeRouter: function() {
         var self = this;
         var Router = Backbone.Router.extend({
             routes: {
@@ -29,37 +41,33 @@ var App = React.createClass({
             },
             home: function() {
                 self.setState({
-                    view: <HomeView handleNav={self.handleNav} />
+                    view: <HomeView
+                        handleNav={self.handleNav}
+                        navigateTo={self.navigateTo}
+                        user={self.state.user} />
                 });
             },
             login: function() {
                 self.setState({
-                    view: <LoginView
-                        handleNav={self.handleNav}
-                        navigateTo={self.navigateTo}
-                        login={self.login} />
+                    view: <LoginView login={self.login} />
                 });
             }
         });
         this.router = new Router();
         Backbone.history.start({pushState: true});
-        this.getSession();
     },
 
-    login: function() {
-        this.setState({authenticated: true});
+    componentWillMount: function() {
+        this.initializeRouter();
+
+        if (!this.props.initialUser) {
+            this.navigateTo('/login');
+        }
+    },
+
+    login: function(user) {
+        this.setState({user: user});
         this.navigateTo('/');
-    },
-
-    getSession: function() {
-        $.get('/api/session', function() {
-            console.log('success');
-            this.setState({authenticated: true});
-        }.bind(this))
-        .fail(function() {
-            console.log('false');
-            this.setState({authenticated: false});
-        }.bind(this));
     },
 
     // onClick handler for <a> tags
@@ -73,6 +81,7 @@ var App = React.createClass({
     },
 
     render: function() {
+        console.log('rerender');
         return <div>
             {this.state.view}
         </div>;

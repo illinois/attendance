@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Attendance</title>
+    </head>
+    <body>
+        <div id="main"></div>
+        <script src="/app.js"></script>
+        <script>
+            React.renderComponent(
+                App({
+                    initialUser: <%- user ? JSON.stringify(user) : 'null' %>
+                }),
+                document.getElementById('main')
+            );
+        </script>
+    </body>
+</html>
