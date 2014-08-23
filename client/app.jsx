@@ -81,7 +81,6 @@ var App = React.createClass({
     },
 
     render: function() {
-        console.log('rerender');
         return <div>
             {this.state.view}
         </div>;

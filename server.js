@@ -33,7 +33,6 @@ passport.deserializeUser(function(netid, done) {
         where: {netid: netid}
     })
     .success(function(user) {
-        console.log(user);
         done(null, user);
     });
 });
