@@ -54,6 +54,11 @@ app.delete('/api/session', function(req, res) {
     res.status(204).end();
 });
 
+app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/login');
+});
+
 app.get('*', function(req, res) {
     res.render('index', {user: req.user});
 });
