@@ -13,4 +13,7 @@ clean:
 lint:
 	@npm run lint
 
-.PHONY: build serve clean
+test:
+	@npm test
+
+.PHONY: build serve install clean lint test

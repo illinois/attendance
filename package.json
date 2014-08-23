@@ -6,7 +6,8 @@
         "watch": "watchify client/app.jsx -o public/app.js -v -d -s App -t reactify",
         "build": "browserify client/app.jsx -o public/app.js -s App -t reactify",
         "start": "npm run watch & nodemon server.js",
-        "lint": "jsxhint *.js models client"
+        "lint": "jsxhint *.js models client",
+        "test": "mocha"
     },
     "repository": {
         "type": "git",
@@ -31,6 +32,8 @@
         "watchify": "1.0.x"
     },
     "devDependencies": {
-        "jsxhint": "0.4.x"
+        "jsxhint": "0.4.x",
+        "mocha": "1.21.x",
+        "should": "4.0.x"
     }
 }
