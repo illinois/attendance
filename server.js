@@ -54,6 +54,44 @@ app.delete('/api/session', function(req, res) {
     res.status(204).end();
 });
 
+app.get('/api/courses', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    db.Course.findAll()
+    .success(function(courses) {
+        res.send({courses: courses});
+    });
+});
+
+app.post('/api/courses', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    if (!req.body.name) return res.status(400).end();
+    db.Course.create({
+        name: req.body.name
+    })
+    .success(function(course) {
+        course.addUser(req.user)
+        .success(function() {
+            res.send(course);
+        });
+    });
+});
+
+app.get('/api/courses/:id', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    db.Course.find({
+        where: {id: req.params.id},
+        include: [db.User, db.Section]
+    })
+    .success(function(course) {
+        if (!course) return res.status(404).end();
+        res.send(course);
+    });
+});
+
+app.get('/api/*', function(req, res) {
+    res.status(404).end();
+});
+
 app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/login');
