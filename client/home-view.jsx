@@ -2,6 +2,7 @@
 
 var React = require('react');
 
+var CourseList = require('./course-list.jsx');
 var Header = require('./header.jsx');
 
 /**
@@ -20,7 +21,7 @@ var HomeView = React.createClass({
                 handleNav={this.props.handleNav}
                 navigateTo={this.props.navigateTo}
                 user={this.props.user} />
-            Home view
+            <CourseList />
         </div>;
     }
 });
