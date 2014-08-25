@@ -17,6 +17,10 @@ module.exports = function(sequelize, DataTypes) {
         },
         hooks: {
             beforeCreate: function(user, fn) {
+                if (typeof user.name !== 'undefined') {
+                    return fn(null, user);
+                }
+
                 var client = ldap.createClient({
                     url: 'ldap://ldap.uiuc.edu:389'
                 });
