@@ -66,6 +66,46 @@ app.get('/api/courses/:id', function(req, res) {
     });
 });
 
+app.get('/api/sections/:id', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    db.Section.find({
+        where: {id: req.params.id}
+    })
+    .success(function(section) {
+        res.send(section);
+    });
+});
+
+app.get('/api/sections/:id/checkins', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    db.Checkin.findAll({
+        where: {SectionId: req.params.id}
+    })
+    .success(function(checkins) {
+        res.send({checkins: checkins});
+    });
+});
+
+app.post('/api/sections/:id/checkins', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    if (!req.body.netid) return res.status(400).end();
+    db.Section.find({
+        where: {id: req.params.id}
+    })
+    .success(function(section) {
+        if (!section) return res.status(404).end();
+        db.Checkin.create({
+            netid: req.body.netid
+        })
+        .success(function(checkin) {
+            section.addCheckin(checkin)
+            .success(function() {
+                res.send(checkin);
+            });
+        });
+    });
+});
+
 app.get('/api/*', function(req, res) {
     res.status(404).end();
 });
