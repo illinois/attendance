@@ -8,12 +8,12 @@ describe('User', function() {
 
     describe('#create()', function() {
         it('should save without error', function(done) {
-            db.User.create({netid: 'user1', name: ''})
+            db.User.create({netid: 'user1'})
             .done(done);
         });
 
         it('should save NetID in lowercase', function(done) {
-            db.User.create({netid: 'USER2', name: ''})
+            db.User.create({netid: 'USER2'})
             .done(function(err, user) {
                 if (err) return done(err);
                 user.netid.should.equal('user2');
@@ -22,7 +22,7 @@ describe('User', function() {
         });
 
         it('should have many Courses', function(done) {
-            db.User.create({netid: 'user3', name: ''})
+            db.User.create({netid: 'user3'})
             .done(function(err, user) {
                 if (err) return done(err);
                 db.Course.create({name: 'CS 225'})

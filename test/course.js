@@ -15,7 +15,7 @@ describe('Course', function() {
             db.Course.create({name: 'CS 225'})
             .done(function(err, course) {
                 if (err) return done(err);
-                db.User.create({netid: 'course1', name: ''})
+                db.User.create({netid: 'course1'})
                 .done(function(err, user) {
                     if (err) return done(err);
                     course.addUser(user).done(done);

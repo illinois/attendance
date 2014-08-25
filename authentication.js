@@ -25,7 +25,34 @@ passport.use(new LocalStrategy(function(username, password, done) {
 
         db.User.findOrCreate({netid: username})
         .success(function(user) {
-            return done(null, user);
+            if (!user.name) {
+                var client = ldap.createClient({
+                    url: 'ldap://ldap.uiuc.edu:389'
+                });
+                var base = 'dc=uiuc,dc=edu';
+                var opts = {
+                    filter: 'uid=' + user.netid,
+                    scope: 'sub',
+                    sizeLimit: 1
+                };
+                client.search(base, opts, function(err, res) {
+                    res.on('searchEntry', function(entry) {
+                        user.updateAttributes({
+                            name: (entry.object.uiucEduFirstName + ' ' +
+                                   entry.object.uiucEduLastName)
+                        })
+                        .success(function() {
+                            done(null, user);
+                        });
+                    });
+
+                    res.on('error', function() {
+                        done(null, user);
+                    });
+                });
+            } else {
+                done(null, user);
+            }
         });
     });
 }));
