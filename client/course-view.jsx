@@ -34,9 +34,13 @@ var CourseView = React.createClass({
         } else {
             var sections = course.sections.map(function(section) {
                 return <div key={section.id}>
-                    {section.name}
+                    <a
+                        href={'/sections/' + section.id}
+                        onClick={this.props.handleNav}>
+                        {section.name}
+                    </a>
                 </div>;
-            });
+            }.bind(this));
             var staff = course.users.map(function(user) {
                 return <div key={user.id}>
                     {user.name}

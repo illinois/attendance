@@ -11,6 +11,7 @@ window.$ = $;
 var HomeView = require('./home-view.jsx');
 var LoginView = require('./login-view.jsx');
 var CourseView = require('./course-view.jsx');
+var SectionView = require('./section-view.jsx');
 
 /**
  * Top-level application component
@@ -39,7 +40,8 @@ var App = React.createClass({
             routes: {
                 '': 'home',
                 'login': 'login',
-                'courses/:id': 'course'
+                'courses/:id': 'course',
+                'sections/:id': 'section'
             },
             home: function() {
                 self.setState({
@@ -57,6 +59,15 @@ var App = React.createClass({
             course: function(id) {
                 self.setState({
                     view: <CourseView
+                        handleNav={self.handleNav}
+                        navigateTo={self.navigateTo}
+                        user={self.state.user}
+                        id={parseInt(id)} />
+                });
+            },
+            section: function(id) {
+                self.setState({
+                    view: <SectionView
                         handleNav={self.handleNav}
                         navigateTo={self.navigateTo}
                         user={self.state.user}
