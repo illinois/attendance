@@ -38,7 +38,7 @@ var LoginView = React.createClass({
             type: 'POST',
             url: '/api/session',
             data: {
-                username: this.state.username + '@illinois.edu',
+                username: this.state.username,
                 password: this.state.password
             }
         });
