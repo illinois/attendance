@@ -10,6 +10,7 @@ window.$ = $;
 
 var HomeView = require('./home-view.jsx');
 var LoginView = require('./login-view.jsx');
+var CourseView = require('./course-view.jsx');
 
 /**
  * Top-level application component
@@ -37,7 +38,8 @@ var App = React.createClass({
         var Router = Backbone.Router.extend({
             routes: {
                 '': 'home',
-                'login': 'login'
+                'login': 'login',
+                'courses/:id': 'course'
             },
             home: function() {
                 self.setState({
@@ -50,6 +52,15 @@ var App = React.createClass({
             login: function() {
                 self.setState({
                     view: <LoginView login={self.login} />
+                });
+            },
+            course: function(id) {
+                self.setState({
+                    view: <CourseView
+                        handleNav={self.handleNav}
+                        navigateTo={self.navigateTo}
+                        user={self.state.user}
+                        id={parseInt(id)} />
                 });
             }
         });

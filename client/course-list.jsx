@@ -8,6 +8,10 @@ var _ = require('underscore');
  * List of courses the current user has access to
  */
 var CourseList = React.createClass({
+    propTypes: {
+        handleNav: React.PropTypes.func.isRequired
+    },
+
     getInitialState: function() {
         return {
             loading: true,
@@ -31,9 +35,13 @@ var CourseList = React.createClass({
         } else {
             body = this.state.courses.map(function(course) {
                 return <div key={course.id}>
-                    {course.name}
+                    <a
+                        href={'/courses/' + course.id}
+                        onClick={this.props.handleNav}>
+                        {course.name}
+                    </a>
                 </div>;
-            });
+            }.bind(this));
         }
 
         return <div>

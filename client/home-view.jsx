@@ -21,7 +21,8 @@ var HomeView = React.createClass({
                 handleNav={this.props.handleNav}
                 navigateTo={this.props.navigateTo}
                 user={this.props.user} />
-            <CourseList />
+            <CourseList
+                handleNav={this.props.handleNav} />
         </div>;
     }
 });
