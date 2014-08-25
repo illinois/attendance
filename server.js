@@ -56,7 +56,7 @@ app.delete('/api/session', function(req, res) {
 
 app.get('/api/courses', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
-    db.Course.findAll()
+    req.user.getCourses()
     .success(function(courses) {
         res.send({courses: courses});
     });
