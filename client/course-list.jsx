@@ -2,7 +2,6 @@
 
 var React = require('react');
 var $ = require('jquery');
-var _ = require('underscore');
 
 /**
  * List of courses the current user has access to
