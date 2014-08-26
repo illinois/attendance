@@ -32,6 +32,11 @@ var SectionView = React.createClass({
             body = <div>Loading...</div>;
         } else {
             body = <div>
+                <a
+                    href={'/courses/' + this.state.section.CourseId}
+                    onClick={this.props.handleNav}>
+                    &laquo; Back to course
+                </a>
                 <h1>{this.state.section.name}</h1>
                 <CheckinForm sectionId={this.props.id} />
             </div>;

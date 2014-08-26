@@ -1,8 +1,12 @@
 /** @jsx React.DOM */
 
-var React = require('react');
+var React = require('react/addons');
 var $ = require('jquery');
+var moment = require('moment');
 
+/**
+ * Renders card swipe checkin form and last 5 swipes
+ */
 var CheckinForm = React.createClass({
     propTypes: {
         sectionId: React.PropTypes.number.isRequired
@@ -11,13 +15,20 @@ var CheckinForm = React.createClass({
     getInitialState: function() {
         return {
             swipeData: '',
-            lastUin: '',
+            lastSwipes: [],
             message: ''
         };
     },
 
     componentDidMount: function() {
         this.refs.swipeData.getDOMNode().focus();
+
+        // Update relative time labels
+        this.interval = setInterval(this.forceUpdate.bind(this), 1000);
+    },
+
+    componentWillUnmount: function() {
+        clearInterval(this.interval);
     },
 
     handleSwipeDataChange: function(e) {
@@ -25,15 +36,23 @@ var CheckinForm = React.createClass({
     },
 
     handleSubmit: function() {
+        if (!this.state.swipeData) {
+            return false;
+        }
+
         var request = $.ajax({
             type: 'POST',
             url: '/api/sections/' + this.props.sectionId + '/checkins',
             data: {swipeData: this.state.swipeData}
         });
         request.done(function(result) {
+            var newLastSwipes = React.addons.update(
+                this.state.lastSwipes,
+                {$unshift: [result]}
+            ).slice(0, 5);
             this.setState({
                 swipeData: '',
-                lastUin: result.uin,
+                lastSwipes: newLastSwipes,
                 message: ''
             });
         }.bind(this));
@@ -47,18 +66,24 @@ var CheckinForm = React.createClass({
     },
 
     render: function() {
+        var lastSwipes = this.state.lastSwipes.map(function(swipe) {
+            return <div key={swipe.id}>
+                {swipe.uin} - {moment(swipe.createdAt).fromNow()}
+            </div>;
+        });
         return <div>
-            {this.state.message}
+            <div>Swipe your i-card</div>
+            <div>{this.state.message}</div>
             <form onSubmit={this.handleSubmit}>
                 <input
                     type="text"
                     id="swipeData"
                     ref="swipeData"
                     value={this.state.swipeData}
-                    onChange={this.handleSwipeDataChange}
-                    required />
+                    onChange={this.handleSwipeDataChange} />
             </form>
-            Last checkin: {this.state.lastUin}
+            <h2>Last swipes</h2>
+            {lastSwipes}
         </div>;
     }
 });
