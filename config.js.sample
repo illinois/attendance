@@ -1,0 +1,27 @@
+var config = {};
+
+config.db = {
+    development: {
+        host: 'localhost',
+        database: 'attendance',
+        username: 'root',
+        password: null,
+        logging: console.log
+    },
+    production: {
+        host: 'localhost',
+        database: 'attendance',
+        username: 'root',
+        password: null,
+        logging: false
+    },
+    test: {
+        host: 'localhost',
+        database: 'attendance_test',
+        username: 'root',
+        password: null,
+        logging: false
+    },
+};
+
+module.exports = config;

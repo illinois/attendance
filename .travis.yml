@@ -2,7 +2,7 @@ language: node_js
 node_js:
     - '0.10'
 before_script:
-    - mysql -e 'create database attendance;'
+    - mysql -e 'create database attendance_test;'
 script:
     - make lint
     - make test

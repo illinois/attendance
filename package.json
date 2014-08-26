@@ -7,7 +7,7 @@
         "build": "browserify client/app.jsx -o public/app.js -s App -t reactify",
         "start": "npm run watch & nodemon --ignore client/ --ignore public/app.js server.js",
         "lint": "jsxhint *.js models client",
-        "test": "mocha"
+        "test": "NODE_ENV=test mocha"
     },
     "repository": {
         "type": "git",

@@ -127,30 +127,11 @@ app.get('*', function(req, res) {
     res.render('index', {user: req.user});
 });
 
-db
-.sequelize
-.sync({ force: true })
+db.sequelize.sync()
 .complete(function(err) {
     if (err) {
         throw err[0];
     } else {
-        db.Course.create({name: 'CS 225'})
-        .success(function(course) {
-            db.User.create({netid: 'klwang3'})
-            .success(function(user) {
-                course.addUser(user);
-            });
-
-            db.Section.create({name: 'lab_intro'})
-            .success(function(section) {
-                course.addSection(section);
-            });
-
-            db.Section.create({name: 'lab_debug'})
-            .success(function(section) {
-                course.addSection(section);
-            });
-        });
         app.listen(3000);
     }
 });
