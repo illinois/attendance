@@ -4,6 +4,7 @@ var React = require('react');
 var $ = require('jquery');
 
 var Header = require('./header.jsx');
+var CheckinForm = require('./checkin-form.jsx');
 
 var SectionView = React.createClass({
     propTypes: {
@@ -32,6 +33,7 @@ var SectionView = React.createClass({
         } else {
             body = <div>
                 <h1>{this.state.section.name}</h1>
+                <CheckinForm sectionId={this.props.id} />
             </div>;
         }
 

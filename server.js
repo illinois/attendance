@@ -4,6 +4,7 @@ var session = require('express-session');
 
 var passport = require('./authentication');
 var db = require('./models');
+var parseSwipe = require('./parse-swipe');
 
 var app = express();
 
@@ -88,14 +89,18 @@ app.get('/api/sections/:id/checkins', function(req, res) {
 
 app.post('/api/sections/:id/checkins', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
-    if (!req.body.netid) return res.status(400).end();
+    if (!req.body.swipeData) return res.status(400).end();
+
+    var uin = parseSwipe(req.body.swipeData);
+    if (!uin) return res.status(400).end();
+
     db.Section.find({
         where: {id: req.params.id}
     })
     .success(function(section) {
         if (!section) return res.status(404).end();
         db.Checkin.create({
-            netid: req.body.netid
+            uin: uin
         })
         .success(function(checkin) {
             section.addCheckin(checkin)
