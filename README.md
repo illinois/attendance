@@ -6,8 +6,10 @@ Attendance app for CS 225 lab sections.
 
 Setup instructions
 ------------------
-```
+```bash
 npm install
+cp config.js.sample config.js
+# Set up config.js
 make serve
 ```
 
