@@ -6,6 +6,7 @@ module.exports = function(sequelize, DataTypes) {
         classMethods: {
             associate: function(models) {
                 User.hasMany(models.Course);
+                User.hasMany(models.Checkin);
             }
         },
         setterMethods: {

@@ -5,6 +5,7 @@ module.exports = function(sequelize, DataTypes) {
         classMethods: {
             associate: function(models) {
                 Checkin.belongsTo(models.Section);
+                Checkin.belongsTo(models.User);
             }
         }
     });

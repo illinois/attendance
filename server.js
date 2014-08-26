@@ -103,9 +103,12 @@ app.post('/api/sections/:id/checkins', function(req, res) {
             uin: uin
         })
         .success(function(checkin) {
-            section.addCheckin(checkin)
+            checkin.setUser(req.user)
             .success(function() {
-                res.send(checkin);
+                section.addCheckin(checkin)
+                .success(function() {
+                    res.send(checkin);
+                });
             });
         });
     });
