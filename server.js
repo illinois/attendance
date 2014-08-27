@@ -1,20 +1,35 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var MySQLStore = require('connect-mysql')(session);
 
+var config = require('./config');
 var passport = require('./authentication');
 var db = require('./models');
 var parseSwipe = require('./parse-swipe');
+
+var NODE_ENV = process.env.NODE_ENV || 'development';
 
 var app = express();
 
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
+
+var dbConfig = config.db[NODE_ENV];
 app.use(session({
+    store: new MySQLStore({
+        config: {
+            host: dbConfig.host,
+            database: dbConfig.database,
+            user: dbConfig.username,
+            password: dbConfig.password
+        }
+    }),
     secret: 'not secret',
     resave: true,
     saveUninitialized: true
 }));
+
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(passport.initialize());
 app.use(passport.session());

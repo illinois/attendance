@@ -17,6 +17,7 @@
         "backbone": "1.1.x",
         "body-parser": "1.6.x",
         "browserify": "5.10.x",
+        "connect-mysql": "2.1.x",
         "ejs": "1.0.x",
         "express": "4.8.x",
         "express-session": "1.7.x",
