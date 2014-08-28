@@ -1,6 +1,7 @@
 module.exports = function(sequelize, DataTypes) {
     var Section = sequelize.define('Section', {
-        name: DataTypes.STRING
+        name: DataTypes.STRING,
+        notes: {type: DataTypes.TEXT, defaultValue: ''}
     }, {
         classMethods: {
             associate: function(models) {
