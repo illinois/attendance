@@ -39,6 +39,9 @@ var SectionView = React.createClass({
                 </a>
                 <h1>{this.state.section.name}</h1>
                 <CheckinForm sectionId={this.props.id} />
+                <a href={'/api/sections/' + this.props.id + '/checkins.csv'}>
+                    Export to CSV
+                </a>
             </div>;
         }
 

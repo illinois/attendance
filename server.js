@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var MySQLStore = require('connect-mysql')(session);
+var async = require('async');
 
 var config = require('./config');
 var passport = require('./authentication');
@@ -139,6 +140,38 @@ app.get('/api/sections/:id/checkins', function(req, res) {
     })
     .success(function(checkins) {
         res.send({checkins: checkins});
+    });
+});
+
+app.get('/api/sections/:id/checkins.csv', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    db.Section.find({id: req.params.id})
+    .success(function(section) {
+        section.getCourse()
+        .success(function(course) {
+            course.hasUser(req.user)
+            .success(function(result) {
+                if (!result) return res.status(401).end();
+                var query = (
+                    'SELECT uin, MIN(createdAt) as timestamp ' +
+                    'FROM Checkins WHERE SectionId=? ' +
+                    'GROUP BY uin ORDER BY timestamp'
+                );
+                db.sequelize.query(query, null, {raw: true}, [req.params.id])
+                .success(function(checkins) {
+                    res.attachment(section.name + '.csv');
+                    res.write('uin,timestamp\n');
+                    async.each(checkins, function(checkin, callback) {
+                        var uin = checkin.uin;
+                        var timestamp = checkin.timestamp.toISOString();
+                        res.write(uin + ',' + timestamp + '\n');
+                        callback();
+                    }, function() {
+                        res.end();
+                    });
+                });
+            });
+        });
     });
 });
 
