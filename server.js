@@ -135,7 +135,9 @@ app.get('/api/sections/:id', function(req, res) {
 
 app.get('/api/sections/:id/checkins', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
-    db.Section.find({id: req.params.id})
+    db.Section.find({
+        where: {id: req.params.id}
+    })
     .success(function(section) {
         section.getCourse()
         .success(function(course) {
@@ -158,7 +160,9 @@ app.get('/api/sections/:id/checkins', function(req, res) {
 
 app.get('/api/sections/:id/checkins.csv', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
-    db.Section.find({id: req.params.id})
+    db.Section.find({
+        where: {id: req.params.id}
+    })
     .success(function(section) {
         section.getCourse()
         .success(function(course) {
