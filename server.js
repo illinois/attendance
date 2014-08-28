@@ -221,6 +221,55 @@ app.post('/api/sections/:id/checkins', function(req, res) {
     });
 });
 
+app.get('/api/sections/:id/comments', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    db.Section.find({
+        where: {id: req.params.id}
+    })
+    .success(function(section) {
+        section.getCourse()
+        .success(function(course) {
+            course.hasUser(req.user)
+            .success(function(result) {
+                if (!result) return res.status(401).end();
+                section.getComments({
+                    include: [db.User]
+                })
+                .success(function(comments) {
+                    res.send({comments: comments});
+                });
+            });
+        });
+    });
+});
+
+app.post('/api/sections/:id/comments', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    if (!req.body.text) return res.status(400).end();
+    db.Section.find({
+        where: {id: req.params.id}
+    })
+    .success(function(section) {
+        section.getCourse()
+        .success(function(course) {
+            course.hasUser(req.user)
+            .success(function(result) {
+                if (!result) return res.status(401).end();
+                db.Comment.create({text: req.body.text})
+                .success(function(comment) {
+                    comment.setUser(req.user)
+                    .success(function() {
+                        section.addComment(comment)
+                        .success(function() {
+                            res.send(comment);
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
+
 app.get('/api/*', function(req, res) {
     res.status(404).end();
 });
