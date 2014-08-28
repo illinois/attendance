@@ -166,9 +166,9 @@ app.get('/api/sections/:id/checkins.csv', function(req, res) {
             .success(function(result) {
                 if (!result) return res.status(401).end();
                 var query = (
-                    'SELECT uin, MIN(createdAt) as timestamp ' +
+                    'SELECT uin, createdAt as timestamp ' +
                     'FROM Checkins WHERE SectionId=? ' +
-                    'GROUP BY uin ORDER BY timestamp'
+                    'ORDER BY timestamp'
                 );
                 db.sequelize.query(query, null, {raw: true}, [req.params.id])
                 .success(function(checkins) {
@@ -195,20 +195,22 @@ app.post('/api/sections/:id/checkins', function(req, res) {
     var uin = parseSwipe(req.body.swipeData);
     if (!uin) return res.status(400).end();
 
-    db.Section.find({
-        where: {id: req.params.id}
-    })
+    db.Section.find({where: {id: req.params.id}})
     .success(function(section) {
         if (!section) return res.status(404).end();
-        db.Checkin.create({
-            uin: uin
+        db.Checkin.find({
+            where: {SectionId: req.params.id, uin: uin}
         })
         .success(function(checkin) {
-            checkin.setUser(req.user)
-            .success(function() {
-                section.addCheckin(checkin)
+            if (checkin) return res.status(409).send(checkin);
+            db.Checkin.create({uin: uin})
+            .success(function(checkin) {
+                checkin.setUser(req.user)
                 .success(function() {
-                    res.send(checkin);
+                    section.addCheckin(checkin)
+                    .success(function() {
+                        res.send(checkin);
+                    });
                 });
             });
         });

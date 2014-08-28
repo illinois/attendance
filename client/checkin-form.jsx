@@ -48,12 +48,12 @@ var CheckinForm = React.createClass({
             return false;
         }
 
-        var request = $.ajax({
+        $.ajax({
             type: 'POST',
             url: '/api/sections/' + this.props.sectionId + '/checkins',
             data: {swipeData: this.state.swipeData}
-        });
-        request.done(function(result) {
+        })
+        .done(function(result) {
             var newLastSwipes = React.addons.update(
                 this.state.lastSwipes,
                 {$unshift: [result]}
@@ -63,11 +63,19 @@ var CheckinForm = React.createClass({
                 lastSwipes: newLastSwipes,
                 message: ''
             });
-        }.bind(this));
-        request.fail(function() {
+        }.bind(this))
+        .fail(function(xhr) {
+            var message;
+            if (xhr.status === 409) {
+                var checkin = xhr.responseJSON;
+                var timeAgo = moment(checkin.createdAt).fromNow();
+                message = 'Already checked in ' + timeAgo;
+            } else {
+                message = 'Invalid swipe';
+            }
             this.setState({
                 swipeData: '',
-                message: 'Swipe error'
+                message: message
             });
         }.bind(this));
         return false;
@@ -81,7 +89,7 @@ var CheckinForm = React.createClass({
         });
         return <div>
             <div>Swipe your i-card</div>
-            <div>{this.state.message}</div>
+            <div style={{color: 'red'}}>{this.state.message}</div>
             <form onSubmit={this.handleSubmit}>
                 <input
                     type="text"
