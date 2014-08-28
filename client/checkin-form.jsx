@@ -23,6 +23,14 @@ var CheckinForm = React.createClass({
     componentDidMount: function() {
         this.refs.swipeData.getDOMNode().focus();
 
+        // Populate "Last swipes" section
+        var url = (
+            '/api/sections/' + this.props.sectionId + '/checkins?last=1'
+        );
+        $.get(url, function(data) {
+            this.setState({lastSwipes: data.checkins});
+        }.bind(this));
+
         // Update relative time labels
         this.interval = setInterval(this.forceUpdate.bind(this), 1000);
     },

@@ -135,11 +135,24 @@ app.get('/api/sections/:id', function(req, res) {
 
 app.get('/api/sections/:id/checkins', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
-    db.Checkin.findAll({
-        where: {SectionId: req.params.id}
-    })
-    .success(function(checkins) {
-        res.send({checkins: checkins});
+    db.Section.find({id: req.params.id})
+    .success(function(section) {
+        section.getCourse()
+        .success(function(course) {
+            course.hasUser(req.user)
+            .success(function(result) {
+                if (!result) return res.status(401).end();
+                var last = req.query.last;
+                db.Checkin.findAll({
+                    where: {SectionId: req.params.id},
+                    order: last ? [['createdAt', 'DESC']] : null,
+                    limit: last ? 5 : null
+                })
+                .success(function(checkins) {
+                    res.send({checkins: checkins});
+                });
+            });
+        });
     });
 });
 
