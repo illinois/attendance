@@ -70,6 +70,46 @@ app.post('/api/courses', function(req, res) {
     });
 });
 
+app.get('/api/courses/:id/sections', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    db.Course.find({
+        where: {id: req.params.id}
+    })
+    .success(function(course) {
+        course.hasUser(req.user)
+        .success(function(result) {
+            if (!result) return res.status(401).end();
+            course.getSections()
+            .success(function(sections) {
+                res.send({sections: sections});
+            });
+        });
+    });
+});
+
+app.post('/api/courses/:id/sections', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    if (!req.body.name) return res.status(400).end();
+    db.Course.find({
+        where: {id: req.params.id}
+    })
+    .success(function(course) {
+        db.Section.create({
+            name: req.body.name
+        })
+        .success(function(section) {
+            course.hasUser(req.user)
+            .success(function(result) {
+                if (!result) return res.status(401).end();
+                course.addSection(section)
+                .success(function() {
+                    res.send(section);
+                });
+            });
+        });
+    });
+});
+
 app.get('/api/courses/:id', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     db.Course.find({
