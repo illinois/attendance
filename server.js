@@ -26,7 +26,7 @@ app.use(session({
             password: dbConfig.password
         }
     }),
-    secret: 'not secret',
+    secret: config.sessionSecret,
     resave: true,
     saveUninitialized: true
 }));
@@ -235,6 +235,6 @@ db.sequelize.sync()
     if (err) {
         throw err[0];
     } else {
-        app.listen(4000);
+        app.listen(config.port);
     }
 });

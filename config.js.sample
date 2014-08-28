@@ -1,5 +1,8 @@
 var config = {};
 
+config.port = 4000;
+config.sessionSecret = 'not secret';
+
 config.db = {
     development: {
         host: 'localhost',
