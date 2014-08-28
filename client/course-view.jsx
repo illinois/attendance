@@ -43,7 +43,7 @@ var CourseView = React.createClass({
             }.bind(this));
             var staff = course.users.map(function(user) {
                 return <div key={user.id}>
-                    {user.name}
+                    {user.name} ({user.netid})
                 </div>;
             });
 
