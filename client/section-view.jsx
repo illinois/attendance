@@ -5,6 +5,7 @@ var $ = require('jquery');
 
 var Header = require('./header.jsx');
 var CheckinForm = require('./checkin-form.jsx');
+var CommentSection = require('./comment-section.jsx');
 
 var SectionView = React.createClass({
     propTypes: {
@@ -44,6 +45,7 @@ var SectionView = React.createClass({
                     download>
                     Export to CSV
                 </a>
+                <CommentSection sectionId={this.props.id} />
             </div>;
         }
 

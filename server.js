@@ -261,7 +261,13 @@ app.post('/api/sections/:id/comments', function(req, res) {
                     .success(function() {
                         section.addComment(comment)
                         .success(function() {
-                            res.send(comment);
+                            db.Comment.find({
+                                where: {id: comment.id},
+                                include: [db.User]
+                            })
+                            .success(function(commentWithUser) {
+                                res.send(commentWithUser);
+                            });
                         });
                     });
                 });
