@@ -119,7 +119,11 @@ app.get('/api/courses/:id', function(req, res) {
     })
     .success(function(course) {
         if (!course) return res.status(404).end();
-        res.send(course);
+        course.hasUser(req.user)
+        .success(function(result) {
+            if (!result) return res.status(401).end();
+            res.send(course);
+        });
     });
 });
 
@@ -129,7 +133,10 @@ app.get('/api/sections/:id', function(req, res) {
         where: {id: req.params.id}
     })
     .success(function(section) {
-        res.send(section);
+        section.hasUser(req.user, function(err, result) {
+            if (!result) return res.status(401).end();
+            res.send(section);
+        });
     });
 });
 
@@ -191,21 +198,26 @@ app.post('/api/sections/:id/checkins', function(req, res) {
     var uin = parseSwipe(req.body.swipeData);
     if (!uin) return res.status(400).end();
 
-    db.Section.find({where: {id: req.params.id}})
+    db.Section.find({
+        where: {id: req.params.id}
+    })
     .success(function(section) {
         if (!section) return res.status(404).end();
-        db.Checkin.find({
-            where: {SectionId: req.params.id, uin: uin}
-        })
-        .success(function(checkin) {
-            if (checkin) return res.status(409).send(checkin);
-            db.Checkin.create({uin: uin})
+        section.hasUser(req.user, function(err, result) {
+            if (!result) return res.status(401).end();
+            db.Checkin.find({
+                where: {SectionId: req.params.id, uin: uin}
+            })
             .success(function(checkin) {
-                checkin.setUser(req.user)
-                .success(function() {
-                    section.addCheckin(checkin)
+                if (checkin) return res.status(409).send(checkin);
+                db.Checkin.create({uin: uin})
+                .success(function(checkin) {
+                    checkin.setUser(req.user)
                     .success(function() {
-                        res.send(checkin);
+                        section.addCheckin(checkin)
+                        .success(function() {
+                            res.send(checkin);
+                        });
                     });
                 });
             });
