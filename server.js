@@ -36,6 +36,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 /**
+ * Login.
+ *
  * Parameters:
  *   username: NetID
  *   password: Active Directory password
@@ -44,6 +46,9 @@ app.post('/api/session', passport.authenticate('local'), function(req, res) {
     res.send(req.user);
 });
 
+/**
+ * Logout.
+ */
 app.delete('/api/session', function(req, res) {
     req.logout();
     res.status(204).end();
@@ -272,15 +277,26 @@ app.post('/api/sections/:id/comments', function(req, res) {
     });
 });
 
+/**
+ * Return 404 on all nonexistent API endpoints.
+ */
 app.get('/api/*', function(req, res) {
     res.status(404).end();
 });
 
+/**
+ * Alternate logout route.
+ *
+ * Allows users to log out by directing their browser directly to /logout.
+ */
 app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/login');
 });
 
+/**
+ * Render single-page application on all other non-API routes.
+ */
 app.get('*', function(req, res) {
     res.render('index', {user: req.user});
 });
