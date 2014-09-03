@@ -95,13 +95,13 @@ app.post('/api/courses/:id/sections', function(req, res) {
         where: {id: req.params.id}
     })
     .success(function(course) {
-        db.Section.create({
-            name: req.body.name
-        })
-        .success(function(section) {
-            course.hasUser(req.user)
-            .success(function(result) {
-                if (!result) return res.status(401).end();
+        course.hasUser(req.user)
+        .success(function(result) {
+            if (!result) return res.status(401).end();
+            db.Section.create({
+                name: req.body.name
+            })
+            .success(function(section) {
                 course.addSection(section)
                 .success(function() {
                     res.send(section);
@@ -139,20 +139,16 @@ app.get('/api/sections/:id/checkins', function(req, res) {
         where: {id: req.params.id}
     })
     .success(function(section) {
-        section.getCourse()
-        .success(function(course) {
-            course.hasUser(req.user)
-            .success(function(result) {
-                if (!result) return res.status(401).end();
-                var last = req.query.last;
-                db.Checkin.findAll({
-                    where: {SectionId: req.params.id},
-                    order: last ? [['createdAt', 'DESC']] : null,
-                    limit: last ? 5 : null
-                })
-                .success(function(checkins) {
-                    res.send({checkins: checkins});
-                });
+        section.hasUser(req.user, function(err, result) {
+            if (!result) return res.status(401).end();
+            var last = req.query.last;
+            db.Checkin.findAll({
+                where: {SectionId: req.params.id},
+                order: last ? [['createdAt', 'DESC']] : null,
+                limit: last ? 5 : null
+            })
+            .success(function(checkins) {
+                res.send({checkins: checkins});
             });
         });
     });
@@ -164,28 +160,24 @@ app.get('/api/sections/:id/checkins.csv', function(req, res) {
         where: {id: req.params.id}
     })
     .success(function(section) {
-        section.getCourse()
-        .success(function(course) {
-            course.hasUser(req.user)
-            .success(function(result) {
-                if (!result) return res.status(401).end();
-                var query = (
-                    'SELECT uin, createdAt as timestamp ' +
-                    'FROM Checkins WHERE SectionId=? ' +
-                    'ORDER BY timestamp'
-                );
-                db.sequelize.query(query, null, {raw: true}, [req.params.id])
-                .success(function(checkins) {
-                    res.attachment(section.name + '.csv');
-                    res.write('uin,timestamp\n');
-                    async.each(checkins, function(checkin, callback) {
-                        var uin = checkin.uin;
-                        var timestamp = checkin.timestamp.toISOString();
-                        res.write(uin + ',' + timestamp + '\n');
-                        callback();
-                    }, function() {
-                        res.end();
-                    });
+        section.hasUser(req.user, function(err, result) {
+            if (!result) return res.status(401).end();
+            var query = (
+                'SELECT uin, createdAt as timestamp ' +
+                'FROM Checkins WHERE SectionId=? ' +
+                'ORDER BY timestamp'
+            );
+            db.sequelize.query(query, null, {raw: true}, [req.params.id])
+            .success(function(checkins) {
+                res.attachment(section.name + '.csv');
+                res.write('uin,timestamp\n');
+                async.each(checkins, function(checkin, callback) {
+                    var uin = checkin.uin;
+                    var timestamp = checkin.timestamp.toISOString();
+                    res.write(uin + ',' + timestamp + '\n');
+                    callback();
+                }, function() {
+                    res.end();
                 });
             });
         });
@@ -227,17 +219,13 @@ app.get('/api/sections/:id/comments', function(req, res) {
         where: {id: req.params.id}
     })
     .success(function(section) {
-        section.getCourse()
-        .success(function(course) {
-            course.hasUser(req.user)
-            .success(function(result) {
-                if (!result) return res.status(401).end();
-                section.getComments({
-                    include: [db.User]
-                })
-                .success(function(comments) {
-                    res.send({comments: comments});
-                });
+        section.hasUser(req.user, function(err, result) {
+            if (!result) return res.status(401).end();
+            section.getComments({
+                include: [db.User]
+            })
+            .success(function(comments) {
+                res.send({comments: comments});
             });
         });
     });
@@ -250,24 +238,20 @@ app.post('/api/sections/:id/comments', function(req, res) {
         where: {id: req.params.id}
     })
     .success(function(section) {
-        section.getCourse()
-        .success(function(course) {
-            course.hasUser(req.user)
-            .success(function(result) {
-                if (!result) return res.status(401).end();
-                db.Comment.create({text: req.body.text})
-                .success(function(comment) {
-                    comment.setUser(req.user)
+        section.hasUser(req.user, function(err, result) {
+            if (!result) return res.status(401).end();
+            db.Comment.create({text: req.body.text})
+            .success(function(comment) {
+                comment.setUser(req.user)
+                .success(function() {
+                    section.addComment(comment)
                     .success(function() {
-                        section.addComment(comment)
-                        .success(function() {
-                            db.Comment.find({
-                                where: {id: comment.id},
-                                include: [db.User]
-                            })
-                            .success(function(commentWithUser) {
-                                res.send(commentWithUser);
-                            });
+                        db.Comment.find({
+                            where: {id: comment.id},
+                            include: [db.User]
+                        })
+                        .success(function(commentWithUser) {
+                            res.send(commentWithUser);
                         });
                     });
                 });
