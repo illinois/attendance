@@ -88,7 +88,7 @@ var CheckinForm = React.createClass({
             </div>;
         });
         return <div>
-            <div>Swipe your i-card</div>
+            <div>Swipe i-card or enter UIN</div>
             <div style={{color: 'red'}}>{this.state.message}</div>
             <form onSubmit={this.handleSubmit}>
                 <input
