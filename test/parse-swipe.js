@@ -1,6 +1,6 @@
 var parseSwipe = require('../parse-swipe');
 
-describe('parseSwipe', function() {
+describe('parseSwipe()', function() {
     it('should handle 16-digit card numbers', function(done) {
         var uin = parseSwipe('6397600000001000');
         uin.should.equal('600000001');
