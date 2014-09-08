@@ -82,24 +82,35 @@ var CheckinForm = React.createClass({
     },
 
     render: function() {
+        var alert = null;
+        if (this.state.message) {
+            alert = <div className="alert alert-danger" role="alert">
+                {this.state.message}
+            </div>;
+        }
+
         var lastSwipes = this.state.lastSwipes.map(function(swipe) {
             return <div key={swipe.id}>
                 {swipe.uin} - {moment(swipe.createdAt).fromNow()}
             </div>;
         });
-        return <div>
-            <div>Swipe i-card or enter UIN</div>
-            <div style={{color: 'red'}}>{this.state.message}</div>
-            <form onSubmit={this.handleSubmit}>
-                <input
-                    type="text"
-                    id="swipeData"
-                    ref="swipeData"
-                    value={this.state.swipeData}
-                    onChange={this.handleSwipeDataChange} />
-            </form>
-            <h2>Last swipes</h2>
-            {lastSwipes}
+
+        return <div className="row">
+            <div className="col-md-4">
+                {alert}
+                <p>Swipe i-card or enter UIN</p>
+                <form onSubmit={this.handleSubmit}>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="swipeData"
+                        ref="swipeData"
+                        value={this.state.swipeData}
+                        onChange={this.handleSwipeDataChange} />
+                </form>
+                <h2>Last swipes</h2>
+                {lastSwipes}
+            </div>
         </div>;
     }
 });

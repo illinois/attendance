@@ -55,28 +55,44 @@ var LoginView = React.createClass({
     },
 
     render: function() {
-        return <div>
-            {this.state.message}
+        var alert = null;
+        if (this.state.message) {
+            alert = <div className="alert alert-danger" role="alert">
+                {this.state.message}
+            </div>;
+        }
+        return <div className="col-md-offset-4 col-md-4">
+            <h1>Login</h1>
+            {alert}
             <form onSubmit={this.handleLogin}>
-                <label htmlFor="username">NetID</label>
-                <input
-                    type="text"
-                    id="username"
-                    ref="username"
-                    value={this.state.username}
-                    onChange={this.handleUsernameChange}
-                    required />
-                <label htmlFor="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    value={this.state.password}
-                    onChange={this.handlePasswordChange}
-                    required />
-                <input
-                    type="submit"
-                    value="Login"
-                    disabled={this.state.disabled} />
+                <div className="form-group">
+                    <label htmlFor="username">NetID</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="username"
+                        ref="username"
+                        value={this.state.username}
+                        onChange={this.handleUsernameChange}
+                        required />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="password">Password</label>
+                    <input
+                        type="password"
+                        className="form-control"
+                        id="password"
+                        value={this.state.password}
+                        onChange={this.handlePasswordChange}
+                        required />
+                </div>
+                <div className="form-group">
+                    <input
+                        type="submit"
+                        className="btn btn-default"
+                        value="Login"
+                        disabled={this.state.disabled} />
+                </div>
             </form>
         </div>;
     }

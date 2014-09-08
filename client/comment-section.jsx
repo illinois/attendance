@@ -63,41 +63,43 @@ var CommentSection = React.createClass({
     },
 
     render: function() {
-        var body;
         if (this.state.loading) {
-            body = <div>Loading...</div>;
-        } else {
-            var comments = this.state.comments.map(function(comment) {
-                var time = moment(comment.createdAt).calendar();
-                return <div key={comment.id} style={{paddingBottom: "10px"}}>
-                    <div>{comment.user.name} ({comment.user.netid})</div>
-                    <div>{time}</div>
-                    <div>{comment.text}</div>
-                </div>;
-            });
+            return <div>
+                <h2>Comments</h2>
+                Loading...
+            </div>;
+        }
 
-            body = <div>
+        var comments = this.state.comments.map(function(comment) {
+            var time = moment(comment.createdAt).calendar();
+            return <div key={comment.id} style={{paddingBottom: "10px"}}>
+                <div>{comment.user.name} ({comment.user.netid})</div>
+                <div>{time}</div>
+                <div>{comment.text}</div>
+            </div>;
+        });
+
+        return <div className="row">
+            <div className="col-md-4">
+                <h2>Comments</h2>
                 {comments}
                 <form onSubmit={this.handleSubmit}>
-                    <div>
+                    <div className="form-group">
                         <textarea
+                            className="form-control"
                             value={this.state.commentText}
                             onChange={this.handleCommentTextChange}
                             required />
                     </div>
-                    <div>
+                    <div className="form-group">
                         <input
                             type="submit"
+                            className="btn btn-default"
                             value="Post"
                             disabled={this.state.disabled} />
                     </div>
                 </form>
-            </div>;
-        }
-
-        return <div>
-            <h2>Comments</h2>
-            {body}
+            </div>
         </div>;
     }
 });

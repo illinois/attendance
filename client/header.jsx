@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 
-var React = require('react');
+var React = require('react/addons');
 var $ = require('jquery');
 
 /**
@@ -10,7 +10,9 @@ var Header = React.createClass({
     propTypes: {
         handleNav: React.PropTypes.func.isRequired,
         navigateTo: React.PropTypes.func.isRequired,
-        user: React.PropTypes.object.isRequired
+        user: React.PropTypes.object,
+        currentRoute: React.PropTypes.string.isRequired,
+        logout: React.PropTypes.func.isRequired
     },
 
     handleLogout: function() {
@@ -18,24 +20,78 @@ var Header = React.createClass({
             type: 'DELETE',
             url: '/api/session'
         }).done(function() {
-            this.props.navigateTo('/login');
+            this.props.logout();
         }.bind(this));
         return false;
     },
 
     render: function() {
-        return <div>
-            <ul>
-                <li>
-                    <a href="/" onClick={this.props.handleNav}>Home</a>
-                </li>
-                <li>
-                    <a href="/logout" onClick={this.handleLogout}>
-                        Logout {this.props.user.netid}
+        var userNavItem;
+        if (this.props.user) {
+            userNavItem = <NavItem
+                currentRoute={this.props.currentRoute}
+                href="/logout"
+                handleNav={this.handleLogout}>
+                Logout {this.props.user.netid}
+            </NavItem>;
+        } else {
+            userNavItem = <NavItem
+                routeName="login"
+                currentRoute={this.props.currentRoute}
+                href="/logout"
+                handleNav={this.handleLogout}>
+                Login
+            </NavItem>;
+        }
+
+        return <nav
+            className="navbar navbar-default navbar-static-top"
+            role="navigation">
+            <div className="container">
+                <div className="navbar-header">
+                    <a
+                        className="navbar-brand"
+                        href="/"
+                        onClick={this.props.handleNav}>
+                        Attendance
                     </a>
-                </li>
-            </ul>
-        </div>;
+                </div>
+                <ul className="nav navbar-nav">
+                    <NavItem
+                        routeName="home"
+                        currentRoute={this.props.currentRoute}
+                        href="/"
+                        handleNav={this.props.handleNav}>
+                        Home
+                    </NavItem>
+                </ul>
+                <ul className="nav navbar-nav navbar-right">
+                    {userNavItem}
+                </ul>
+            </div>
+        </nav>;
+    }
+});
+
+var NavItem = React.createClass({
+    propTypes: {
+        routeName: React.PropTypes.string,
+        currentRoute: React.PropTypes.string.isRequired,
+        href: React.PropTypes.string.isRequired,
+        handleNav: React.PropTypes.func.isRequired
+    },
+
+    render: function() {
+        var routeName = this.props.routeName;
+        var currentRoute = this.props.currentRoute;
+        var classes = React.addons.classSet({
+            'active': this.props.routeName === this.props.currentRoute
+        });
+        return <li className={classes}>
+            <a href={this.props.href} onClick={this.props.handleNav}>
+                {this.props.children}
+            </a>
+        </li>;
     }
 });
 

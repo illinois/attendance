@@ -3,13 +3,9 @@
 var React = require('react');
 var $ = require('jquery');
 
-var Header = require('./header.jsx');
-
 var CourseView = React.createClass({
     propTypes: {
         handleNav: React.PropTypes.func.isRequired,
-        navigateTo: React.PropTypes.func.isRequired,
-        user: React.PropTypes.object.isRequired,
         id: React.PropTypes.number.isRequired
     },
 
@@ -57,10 +53,6 @@ var CourseView = React.createClass({
         }
 
         return <div>
-            <Header
-                handleNav={this.props.handleNav}
-                navigateTo={this.props.navigateTo}
-                user={this.props.user} />
             {body}
         </div>;
     }
