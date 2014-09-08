@@ -90,9 +90,9 @@ var CheckinForm = React.createClass({
         }
 
         var lastSwipes = this.state.lastSwipes.map(function(swipe) {
-            return <div key={swipe.id}>
+            return <li className="list-group-item" key={swipe.id}>
                 {swipe.uin} - {moment(swipe.createdAt).fromNow()}
-            </div>;
+            </li>;
         });
 
         return <div className="row">
@@ -109,7 +109,9 @@ var CheckinForm = React.createClass({
                         onChange={this.handleSwipeDataChange} />
                 </form>
                 <h2>Last swipes</h2>
-                {lastSwipes}
+                <ul className="list-group">
+                    {lastSwipes}
+                </ul>
             </div>
         </div>;
     }

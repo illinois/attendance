@@ -33,19 +33,21 @@ var CourseList = React.createClass({
             body = <div>Loading...</div>;
         } else {
             body = this.state.courses.map(function(course) {
-                return <div key={course.id}>
-                    <a
-                        href={'/courses/' + course.id}
-                        onClick={this.props.handleNav}>
-                        {course.name}
-                    </a>
-                </div>;
+                return <a
+                    href={'/courses/' + course.id}
+                    className="list-group-item"
+                    onClick={this.props.handleNav}
+                    key={course.id}>
+                    {course.name}
+                </a>;
             }.bind(this));
         }
 
         return <div>
             <h1>Courses</h1>
-            {body}
+            <ul className="list-group">
+                {body}
+            </ul>
         </div>;
     }
 });

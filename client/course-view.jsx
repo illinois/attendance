@@ -29,13 +29,13 @@ var CourseView = React.createClass({
             body = <div>Loading...</div>;
         } else {
             var sections = course.sections.map(function(section) {
-                return <div key={section.id}>
-                    <a
-                        href={'/sections/' + section.id}
-                        onClick={this.props.handleNav}>
-                        {section.name}
-                    </a>
-                </div>;
+                return <a
+                    href={'/sections/' + section.id}
+                    className="list-group-item"
+                    onClick={this.props.handleNav}
+                    key={section.id}>
+                    {section.name}
+                </a>;
             }.bind(this));
             var staff = course.users.map(function(user) {
                 return <div key={user.id}>
@@ -46,7 +46,9 @@ var CourseView = React.createClass({
             body = <div>
                 <h1>{this.state.course.name}</h1>
                 <h2>Sections</h2>
-                {sections}
+                <ul className="list-group">
+                    {sections}
+                </ul>
                 <h2>Staff</h2>
                 {staff}
             </div>;
