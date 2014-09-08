@@ -102,7 +102,7 @@ var CheckinForm = React.createClass({
                 <form onSubmit={this.handleSubmit}>
                     <input
                         type="text"
-                        className="form-control"
+                        className="form-control input-lg"
                         id="swipeData"
                         ref="swipeData"
                         value={this.state.swipeData}
