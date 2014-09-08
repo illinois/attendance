@@ -4,7 +4,7 @@
     "author": "Kevin Wang <kevin@kevinwang.com>",
     "scripts": {
         "watch": "watchify client/app.jsx -o public/app.js -v -d -s App -t reactify",
-        "build": "browserify client/app.jsx -o public/app.js -s App -t reactify",
+        "build": "browserify client/app.jsx -s App -t reactify | uglifyjs > public/app.js",
         "start": "npm run watch & nodemon --ignore client/ --ignore public/app.js server.js",
         "lint": "jsxhint *.js models client",
         "test": "NODE_ENV=test mocha"
@@ -33,6 +33,7 @@
         "react": "0.11.x",
         "reactify": "0.14.x",
         "sequelize": "1.7.x",
+        "uglify-js": "2.4.x",
         "underscore": "1.6.x",
         "watchify": "1.0.x"
     },
