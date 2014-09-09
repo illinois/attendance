@@ -72,15 +72,20 @@ var CommentSection = React.createClass({
 
         var comments = this.state.comments.map(function(comment) {
             var time = moment(comment.createdAt).calendar();
-            return <div key={comment.id} style={{paddingBottom: "10px"}}>
-                <div>{comment.user.name} ({comment.user.netid})</div>
-                <div>{time}</div>
+
+            // TODO(klwang3): Remove inline styling
+            return <div key={comment.id} style={{paddingBottom: '20px'}}>
+                <div style={{paddingBottom: '5px'}}>
+                    <strong>{comment.user.name}</strong> ({comment.user.netid})
+                    {' '}
+                    <span style={{color: '#aaa'}}>{time}</span>
+                </div>
                 <div>{comment.text}</div>
             </div>;
         });
 
         return <div className="row">
-            <div className="col-md-4">
+            <div className="col-md-6">
                 <h2>Comments</h2>
                 {comments}
                 <form onSubmit={this.handleSubmit}>
