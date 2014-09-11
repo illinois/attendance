@@ -103,8 +103,9 @@ var App = React.createClass({
             this.navigateTo('/login');
         } else {
             // Strip baseUrl from href for Backbone Router
-            var path = e.currentTarget.pathname.replace(baseUrl, '');
-            this.navigateTo(path);
+            var baseUrlRe = new RegExp('^' + baseUrl);
+            var path = e.currentTarget.pathname;
+            this.navigateTo(path.replace(baseUrlRe, ''));
         }
         return false;
     },
