@@ -3,6 +3,8 @@
 var React = require('react/addons');
 var $ = require('jquery');
 
+var baseUrl = require('../baseurl');
+
 /**
  * Page header
  */
@@ -18,7 +20,7 @@ var Header = React.createClass({
     handleLogout: function() {
         $.ajax({
             type: 'DELETE',
-            url: '/api/session'
+            url: baseUrl + '/api/session'
         }).done(function() {
             this.props.logout();
         }.bind(this));
@@ -30,7 +32,7 @@ var Header = React.createClass({
         if (this.props.user) {
             userNavItem = <NavItem
                 currentRoute={this.props.currentRoute}
-                href="/logout"
+                href={baseUrl + '/logout'}
                 handleNav={this.handleLogout}>
                 Logout {this.props.user.netid}
             </NavItem>;
@@ -38,7 +40,7 @@ var Header = React.createClass({
             userNavItem = <NavItem
                 routeName="login"
                 currentRoute={this.props.currentRoute}
-                href="/logout"
+                href={baseUrl + '/login'}
                 handleNav={this.handleLogout}>
                 Login
             </NavItem>;
@@ -51,7 +53,7 @@ var Header = React.createClass({
                 <div className="navbar-header">
                     <a
                         className="navbar-brand"
-                        href="/"
+                        href={baseUrl + '/'}
                         onClick={this.props.handleNav}>
                         Attendance
                     </a>
@@ -60,7 +62,7 @@ var Header = React.createClass({
                     <NavItem
                         routeName="home"
                         currentRoute={this.props.currentRoute}
-                        href="/"
+                        href={baseUrl + '/'}
                         handleNav={this.props.handleNav}>
                         Home
                     </NavItem>

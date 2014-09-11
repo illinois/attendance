@@ -8,6 +8,7 @@ var $ = Backbone.$ = require('jquery');
 window.React = React;
 window.$ = $;
 
+var baseUrl = require('../baseurl');
 var Header = require('./header.jsx');
 var HomeView = require('./home-view.jsx');
 var LoginView = require('./login-view.jsx');
@@ -75,7 +76,7 @@ var App = React.createClass({
             }
         });
         this.router = new Router();
-        Backbone.history.start({pushState: true});
+        Backbone.history.start({pushState: true, root: baseUrl});
     },
 
     componentWillMount: function() {
@@ -101,7 +102,9 @@ var App = React.createClass({
         if (!this.state.user) {
             this.navigateTo('/login');
         } else {
-            this.navigateTo(e.currentTarget.pathname);
+            // Strip baseUrl from href for Backbone Router
+            var path = e.currentTarget.pathname.replace(baseUrl, '');
+            this.navigateTo(path);
         }
         return false;
     },

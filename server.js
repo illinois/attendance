@@ -4,6 +4,7 @@ var session = require('express-session');
 var MySQLStore = require('connect-mysql')(session);
 var async = require('async');
 
+var baseUrl = require('./baseurl');
 var config = require('./config');
 var passport = require('./authentication');
 var db = require('./models');
@@ -12,9 +13,10 @@ var parseSwipe = require('./parse-swipe');
 var NODE_ENV = process.env.NODE_ENV || 'development';
 
 var app = express();
+var router = express.Router();
 
 app.set('view engine', 'ejs');
-app.use(express.static(__dirname + '/public'));
+app.use(baseUrl, express.static(__dirname + '/public'));
 
 var dbConfig = config.db[NODE_ENV];
 app.use(session({
@@ -42,19 +44,19 @@ app.use(passport.session());
  *   username: NetID
  *   password: Active Directory password
  */
-app.post('/api/session', passport.authenticate('local'), function(req, res) {
+router.post('/api/session', passport.authenticate('local'), function(req, res) {
     res.send(req.user);
 });
 
 /**
  * Logout.
  */
-app.delete('/api/session', function(req, res) {
+router.delete('/api/session', function(req, res) {
     req.logout();
     res.status(204).end();
 });
 
-app.get('/api/courses', function(req, res) {
+router.get('/api/courses', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     req.user.getCourses()
     .success(function(courses) {
@@ -62,7 +64,7 @@ app.get('/api/courses', function(req, res) {
     });
 });
 
-app.post('/api/courses', function(req, res) {
+router.post('/api/courses', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     if (!req.body.name) return res.status(400).end();
     db.Course.create({
@@ -76,7 +78,7 @@ app.post('/api/courses', function(req, res) {
     });
 });
 
-app.get('/api/courses/:id/sections', function(req, res) {
+router.get('/api/courses/:id/sections', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     db.Course.find({
         where: {id: req.params.id}
@@ -93,7 +95,7 @@ app.get('/api/courses/:id/sections', function(req, res) {
     });
 });
 
-app.post('/api/courses/:id/sections', function(req, res) {
+router.post('/api/courses/:id/sections', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     if (!req.body.name) return res.status(400).end();
     db.Course.find({
@@ -116,7 +118,7 @@ app.post('/api/courses/:id/sections', function(req, res) {
     });
 });
 
-app.get('/api/courses/:id', function(req, res) {
+router.get('/api/courses/:id', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     db.Course.find({
         where: {id: req.params.id},
@@ -132,7 +134,7 @@ app.get('/api/courses/:id', function(req, res) {
     });
 });
 
-app.get('/api/sections/:id', function(req, res) {
+router.get('/api/sections/:id', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     db.Section.find({
         where: {id: req.params.id}
@@ -145,7 +147,7 @@ app.get('/api/sections/:id', function(req, res) {
     });
 });
 
-app.get('/api/sections/:id/checkins', function(req, res) {
+router.get('/api/sections/:id/checkins', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     db.Section.find({
         where: {id: req.params.id}
@@ -166,7 +168,7 @@ app.get('/api/sections/:id/checkins', function(req, res) {
     });
 });
 
-app.get('/api/sections/:id/checkins.csv', function(req, res) {
+router.get('/api/sections/:id/checkins.csv', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     db.Section.find({
         where: {id: req.params.id}
@@ -196,7 +198,7 @@ app.get('/api/sections/:id/checkins.csv', function(req, res) {
     });
 });
 
-app.post('/api/sections/:id/checkins', function(req, res) {
+router.post('/api/sections/:id/checkins', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     if (!req.body.swipeData) return res.status(400).end();
 
@@ -230,7 +232,7 @@ app.post('/api/sections/:id/checkins', function(req, res) {
     });
 });
 
-app.get('/api/sections/:id/comments', function(req, res) {
+router.get('/api/sections/:id/comments', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     db.Section.find({
         where: {id: req.params.id}
@@ -248,7 +250,7 @@ app.get('/api/sections/:id/comments', function(req, res) {
     });
 });
 
-app.post('/api/sections/:id/comments', function(req, res) {
+router.post('/api/sections/:id/comments', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     if (!req.body.text) return res.status(400).end();
     db.Section.find({
@@ -280,7 +282,7 @@ app.post('/api/sections/:id/comments', function(req, res) {
 /**
  * Return 404 on all nonexistent API endpoints.
  */
-app.get('/api/*', function(req, res) {
+router.get('/api/*', function(req, res) {
     res.status(404).end();
 });
 
@@ -289,7 +291,7 @@ app.get('/api/*', function(req, res) {
  *
  * Allows users to log out by directing their browser directly to /logout.
  */
-app.get('/logout', function(req, res) {
+router.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/login');
 });
@@ -297,9 +299,14 @@ app.get('/logout', function(req, res) {
 /**
  * Render single-page application on all other non-API routes.
  */
-app.get('*', function(req, res) {
-    res.render('index', {user: req.user});
+router.get('*', function(req, res) {
+    res.render('index', {
+        baseUrl: baseUrl,
+        user: req.user
+    });
 });
+
+app.use(baseUrl, router);
 
 db.sequelize.sync()
 .complete(function(err) {

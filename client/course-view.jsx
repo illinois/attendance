@@ -3,6 +3,8 @@
 var React = require('react');
 var $ = require('jquery');
 
+var baseUrl = require('../baseurl');
+
 var CourseView = React.createClass({
     propTypes: {
         handleNav: React.PropTypes.func.isRequired,
@@ -16,7 +18,7 @@ var CourseView = React.createClass({
     },
 
     componentDidMount: function() {
-        $.get('/api/courses/' + this.props.id, function(data) {
+        $.get(baseUrl + '/api/courses/' + this.props.id, function(data) {
             this.setState({course: data});
         }.bind(this));
     },
@@ -30,7 +32,7 @@ var CourseView = React.createClass({
         } else {
             var sections = course.sections.map(function(section) {
                 return <a
-                    href={'/sections/' + section.id}
+                    href={baseUrl + '/sections/' + section.id}
                     className="list-group-item"
                     onClick={this.props.handleNav}
                     key={section.id}>

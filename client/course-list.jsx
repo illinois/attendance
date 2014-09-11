@@ -3,6 +3,8 @@
 var React = require('react');
 var $ = require('jquery');
 
+var baseUrl = require('../baseurl');
+
 /**
  * List of courses the current user has access to
  */
@@ -19,7 +21,7 @@ var CourseList = React.createClass({
     },
 
     componentDidMount: function() {
-        $.get('/api/courses', function(data) {
+        $.get(baseUrl + '/api/courses', function(data) {
             this.setState({
                 loading: false,
                 courses: data.courses
@@ -34,7 +36,7 @@ var CourseList = React.createClass({
         } else {
             body = this.state.courses.map(function(course) {
                 return <a
-                    href={'/courses/' + course.id}
+                    href={baseUrl + '/courses/' + course.id}
                     className="list-group-item"
                     onClick={this.props.handleNav}
                     key={course.id}>

@@ -3,6 +3,8 @@
 var React = require('react');
 var $ = require('jquery');
 
+var baseUrl = require('../baseurl');
+
 /**
  * Login view
  */
@@ -36,7 +38,7 @@ var LoginView = React.createClass({
         this.setState({disabled: true});
         var request = $.ajax({
             type: 'POST',
-            url: '/api/session',
+            url: baseUrl + '/api/session',
             data: {
                 username: this.state.username,
                 password: this.state.password

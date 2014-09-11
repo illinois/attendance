@@ -4,6 +4,8 @@ var React = require('react/addons');
 var $ = require('jquery');
 var moment = require('moment');
 
+var baseUrl = require('../baseurl');
+
 /**
  * Comments and comment form for given section
  */
@@ -22,7 +24,8 @@ var CommentSection = React.createClass({
     },
 
     componentDidMount: function() {
-        var url = '/api/sections/' + this.props.sectionId + '/comments';
+        var id = this.props.sectionId;
+        var url = baseUrl + '/api/sections/' + id + '/comments';
         $.get(url, function(data) {
             this.setState({
                 loading: false,
@@ -41,9 +44,10 @@ var CommentSection = React.createClass({
         }
         this.setState({disabled: true});
 
+        var id = this.props.sectionId;
         $.ajax({
             type: 'POST',
-            url: '/api/sections/' + this.props.sectionId + '/comments',
+            url: baseUrl + '/api/sections/' + id + '/comments',
             data: {text: this.state.commentText}
         })
         .done(function(result) {

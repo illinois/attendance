@@ -4,6 +4,8 @@ var React = require('react/addons');
 var $ = require('jquery');
 var moment = require('moment');
 
+var baseUrl = require('../baseurl');
+
 /**
  * Renders card swipe checkin form and last 5 swipes
  */
@@ -24,9 +26,8 @@ var CheckinForm = React.createClass({
         this.refs.swipeData.getDOMNode().focus();
 
         // Populate "Last swipes" section
-        var url = (
-            '/api/sections/' + this.props.sectionId + '/checkins?last=1'
-        );
+        var id  = this.props.sectionId;
+        var url = baseUrl + '/api/sections/' + id + '/checkins?last=1';
         $.get(url, function(data) {
             this.setState({lastSwipes: data.checkins});
         }.bind(this));
@@ -48,9 +49,10 @@ var CheckinForm = React.createClass({
             return false;
         }
 
+        var id = this.props.sectionId;
         $.ajax({
             type: 'POST',
-            url: '/api/sections/' + this.props.sectionId + '/checkins',
+            url: baseUrl + '/api/sections/' + id + '/checkins',
             data: {swipeData: this.state.swipeData}
         })
         .done(function(result) {

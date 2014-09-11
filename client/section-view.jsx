@@ -3,6 +3,7 @@
 var React = require('react');
 var $ = require('jquery');
 
+var baseUrl = require('../baseurl');
 var CheckinForm = require('./checkin-form.jsx');
 var CommentSection = require('./comment-section.jsx');
 
@@ -19,7 +20,7 @@ var SectionView = React.createClass({
     },
 
     componentDidMount: function() {
-        $.get('/api/sections/' + this.props.id, function(data) {
+        $.get(baseUrl + '/api/sections/' + this.props.id, function(data) {
             this.setState({section: data});
         }.bind(this));
     },
@@ -32,14 +33,14 @@ var SectionView = React.createClass({
         var id = this.props.id;
         return <div>
             <a
-                href={'/courses/' + this.state.section.CourseId}
+                href={baseUrl + '/courses/' + this.state.section.CourseId}
                 onClick={this.props.handleNav}>
                 &laquo; Back to course
             </a>
             <h1>{this.state.section.name}</h1>
             <CheckinForm sectionId={id} />
             <a
-                href={'/api/sections/' + id + '/checkins.csv'}
+                href={baseUrl + '/api/sections/' + id + '/checkins.csv'}
                 className="btn btn-default"
                 download>
                 Export to CSV
