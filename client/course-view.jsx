@@ -1,9 +1,10 @@
 /** @jsx React.DOM */
 
-var React = require('react');
+var React = require('react/addons');
 var $ = require('jquery');
 
 var baseUrl = require('../baseurl');
+var NewSectionForm = require('./new-section-form.jsx');
 
 var CourseView = React.createClass({
     propTypes: {
@@ -21,6 +22,15 @@ var CourseView = React.createClass({
         $.get(baseUrl + '/api/courses/' + this.props.id, function(data) {
             this.setState({course: data});
         }.bind(this));
+    },
+
+    // Add the new course to the section list.
+    handleNewSection: function(section) {
+        var newCourse = React.addons.update(
+            this.state.course,
+            {sections: {$push: [section]}}
+        );
+        this.setState({course: newCourse});
     },
 
     render: function() {
@@ -51,6 +61,9 @@ var CourseView = React.createClass({
                 <ul className="list-group">
                     {sections}
                 </ul>
+                <NewSectionForm
+                    courseId={this.props.id}
+                    onCreateSection={this.handleNewSection} />
                 <h2>Staff</h2>
                 {staff}
             </div>;
