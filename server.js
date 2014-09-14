@@ -308,6 +308,15 @@ router.get('*', function(req, res) {
 
 app.use(baseUrl, router);
 
+/**
+ * Redirect / to baseUrl if baseUrl is not /.
+ */
+if (baseUrl) {
+    app.get('/', function(req, res) {
+        res.redirect(baseUrl);
+    });
+}
+
 db.sequelize.sync()
 .complete(function(err) {
     if (err) {
