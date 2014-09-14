@@ -19,10 +19,21 @@ var SectionView = React.createClass({
         };
     },
 
-    componentDidMount: function() {
-        $.get(baseUrl + '/api/sections/' + this.props.id, function(data) {
+    loadSection: function(id) {
+        $.get(baseUrl + '/api/sections/' + id, function(data) {
             this.setState({section: data});
         }.bind(this));
+    },
+
+    componentDidMount: function() {
+        this.loadSection(this.props.id);
+    },
+
+    componentWillReceiveProps: function(nextProps) {
+        if (nextProps.id !== this.props.id) {
+            this.setState({section: null});
+            this.loadSection(nextProps.id);
+        }
     },
 
     render: function() {

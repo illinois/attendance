@@ -18,10 +18,21 @@ var CourseView = React.createClass({
         };
     },
 
-    componentDidMount: function() {
-        $.get(baseUrl + '/api/courses/' + this.props.id, function(data) {
+    loadCourse: function(id) {
+        $.get(baseUrl + '/api/courses/' + id, function(data) {
             this.setState({course: data});
         }.bind(this));
+    },
+
+    componentDidMount: function() {
+        this.loadCourse(this.props.id);
+    },
+
+    componentWillReceiveProps: function(nextProps) {
+        if (nextProps.id !== this.props.id) {
+            this.setState({course: null});
+            this.loadCourse(nextProps.id);
+        }
     },
 
     // Add the new course to the section list.
