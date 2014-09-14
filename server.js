@@ -84,6 +84,7 @@ router.get('/api/courses/:id/sections', function(req, res) {
         where: {id: req.params.id}
     })
     .success(function(course) {
+        if (!course) return res.status(404).end();
         course.hasUser(req.user)
         .success(function(result) {
             if (!result) return res.status(401).end();
@@ -102,6 +103,7 @@ router.post('/api/courses/:id/sections', function(req, res) {
         where: {id: req.params.id}
     })
     .success(function(course) {
+        if (!course) return res.status(404).end();
         course.hasUser(req.user)
         .success(function(result) {
             if (!result) return res.status(401).end();
@@ -140,6 +142,7 @@ router.get('/api/sections/:id', function(req, res) {
         where: {id: req.params.id}
     })
     .success(function(section) {
+        if (!section) return res.status(404).end();
         section.hasUser(req.user, function(err, result) {
             if (!result) return res.status(401).end();
             res.send(section);
@@ -153,6 +156,7 @@ router.get('/api/sections/:id/checkins', function(req, res) {
         where: {id: req.params.id}
     })
     .success(function(section) {
+        if (!section) return res.status(404).end();
         section.hasUser(req.user, function(err, result) {
             if (!result) return res.status(401).end();
             var last = req.query.last;
@@ -174,6 +178,7 @@ router.get('/api/sections/:id/checkins.csv', function(req, res) {
         where: {id: req.params.id}
     })
     .success(function(section) {
+        if (!section) return res.status(404).end();
         section.hasUser(req.user, function(err, result) {
             if (!result) return res.status(401).end();
             var query = (
@@ -238,6 +243,7 @@ router.get('/api/sections/:id/comments', function(req, res) {
         where: {id: req.params.id}
     })
     .success(function(section) {
+        if (!section) return res.status(404).end();
         section.hasUser(req.user, function(err, result) {
             if (!result) return res.status(401).end();
             section.getComments({
@@ -257,6 +263,7 @@ router.post('/api/sections/:id/comments', function(req, res) {
         where: {id: req.params.id}
     })
     .success(function(section) {
+        if (!section) return res.status(404).end();
         section.hasUser(req.user, function(err, result) {
             if (!result) return res.status(401).end();
             db.Comment.create({text: req.body.text})
