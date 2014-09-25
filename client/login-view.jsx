@@ -50,7 +50,8 @@ var LoginView = React.createClass({
         request.fail(function() {
             this.setState({
                 disabled: false,
-                message: 'Invalid NetID or password.'
+                message: 'Invalid NetID or password.',
+                password: ''
             });
         }.bind(this));
         return false;
