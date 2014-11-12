@@ -12,6 +12,7 @@ var baseUrl = require('../baseurl');
 var Header = require('./header.jsx');
 var HomeView = require('./home-view.jsx');
 var LoginView = require('./login-view.jsx');
+var AboutView = require('./about-view.jsx');
 var CourseView = require('./course-view.jsx');
 var SectionView = require('./section-view.jsx');
 
@@ -43,6 +44,7 @@ var App = React.createClass({
             routes: {
                 '': 'home',
                 'login': 'login',
+                'about': 'about',
                 'courses/:id': 'course',
                 'sections/:id': 'section'
             },
@@ -56,6 +58,12 @@ var App = React.createClass({
                 self.setState({
                     route: 'login',
                     view: <LoginView login={self.login} />
+                });
+            },
+            about: function() {
+                self.setState({
+                    route: 'about',
+                    view: <AboutView />
                 });
             },
             course: function(id) {

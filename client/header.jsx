@@ -66,6 +66,13 @@ var Header = React.createClass({
                         handleNav={this.props.handleNav}>
                         Home
                     </NavItem>
+                    <NavItem
+                        routeName="about"
+                        currentRoute={this.props.currentRoute}
+                        href={baseUrl + '/about'}
+                        handleNav={this.props.handleNav}>
+                        About
+                    </NavItem>
                 </ul>
                 <ul className="nav navbar-nav navbar-right">
                     {userNavItem}
