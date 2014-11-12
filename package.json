@@ -24,6 +24,7 @@
         "express-session": "1.7.x",
         "jquery": "2.1.x",
         "ldapjs": "0.7.x",
+        "marked": "0.3.x",
         "moment": "2.8.x",
         "mysql": "2.4.x",
         "nodemon": "1.2.x",
