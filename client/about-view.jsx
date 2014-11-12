@@ -8,7 +8,7 @@ var React = require('react');
 var AboutView = React.createClass({
     render: function() {
         var kevin = <a href="mailto:klwang3@illinois.edu">Kevin Wang</a>;
-        var sourceUrl = "https://github.com/kevinwang/attendance";
+        var sourceUrl = 'https://github.com/kevinwang/attendance';
         return <div>
             <h1>About</h1>
             <p>
