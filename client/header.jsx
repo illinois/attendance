@@ -41,7 +41,7 @@ var Header = React.createClass({
                 routeName="login"
                 currentRoute={this.props.currentRoute}
                 href={baseUrl + '/login'}
-                handleNav={this.handleLogout}>
+                handleNav={this.props.handleNav}>
                 Login
             </NavItem>;
         }
