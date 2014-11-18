@@ -30,7 +30,6 @@
         "nodemon": "1.2.x",
         "passport": "0.2.x",
         "passport-local": "1.0.x",
-        "pm2": "0.10.x",
         "react": "0.11.x",
         "reactify": "0.14.x",
         "sequelize": "1.7.x",
