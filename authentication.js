@@ -9,10 +9,10 @@ var db = require('./models');
  */
 passport.use(new LocalStrategy(function(username, password, done) {
     var client = ldap.createClient({
-        url: 'ldaps://ad.uillinois.edu:636'
+        url: 'ldaps://ad.uiuc.edu:636'
     });
 
-    var dn = username + '@illinois.edu';
+    var dn = 'cn=' + username + ',ou=Campus Accounts,dc=ad,dc=uiuc,dc=edu';
     client.bind(dn, password, function(err, user) {
         client.unbind();
 
