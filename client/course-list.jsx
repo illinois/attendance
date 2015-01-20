@@ -34,7 +34,9 @@ var CourseList = React.createClass({
         if (this.state.loading) {
             body = <div>Loading...</div>;
         } else {
-            body = this.state.courses.map(function(course) {
+            body = this.state.courses.filter(function(course) {
+                return !course.isArchived;
+            }).map(function(course) {
                 return <a
                     href={baseUrl + '/courses/' + course.id}
                     className="list-group-item"
