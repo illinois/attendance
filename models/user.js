@@ -27,6 +27,7 @@ module.exports = function(sequelize, DataTypes) {
                     sizeLimit: 1
                 };
                 client.search(base, opts, function(err, res) {
+                    if (err) return;
                     res.on('searchEntry', function(entry) {
                         this.updateAttributes({
                             name: (entry.object.uiucEduFirstName + ' ' +
