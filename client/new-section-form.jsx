@@ -23,6 +23,12 @@ var NewSectionForm = React.createClass({
         return false;
     },
 
+    componentDidUpdate: function(prevProps, prevState) {
+        if (this.state.expanded && !prevState.expanded) {
+            this.refs.sectionName.getDOMNode().focus();
+        }
+    },
+
     handleSectionNameChange: function(e) {
         this.setState({sectionName: e.target.value});
     },
