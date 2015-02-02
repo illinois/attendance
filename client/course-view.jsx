@@ -5,6 +5,7 @@ var $ = require('jquery');
 
 var baseUrl = require('../baseurl');
 var NewSectionForm = require('./new-section-form.jsx');
+var AddStaffForm = require('./add-staff-form.jsx');
 
 var CourseView = React.createClass({
     propTypes: {
@@ -44,6 +45,14 @@ var CourseView = React.createClass({
         this.setState({course: newCourse});
     },
 
+    handleAddStaff: function(user) {
+        var newCourse = React.addons.update(
+            this.state.course,
+            {users: {$push: [user]}}
+        );
+        this.setState({course: newCourse});
+    },
+
     render: function() {
         var course = this.state.course;
 
@@ -77,6 +86,9 @@ var CourseView = React.createClass({
                     onCreateSection={this.handleNewSection} />
                 <h2>Staff</h2>
                 {staff}
+                <AddStaffForm
+                    courseId={this.props.id}
+                    onAddStaff={this.handleAddStaff} />
             </div>;
         }
 

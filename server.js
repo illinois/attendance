@@ -94,6 +94,44 @@ router.get('/api/courses/:id', function(req, res) {
     });
 });
 
+router.get('/api/courses/:id/staff', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    db.Course.find({
+        where: {id: req.params.id},
+        include: [db.User]
+    })
+    .success(function(course) {
+        if (!course) return res.status(404).end();
+        course.hasUser(req.user)
+        .success(function(result) {
+            if (!result) return res.status(401).end();
+            res.send({staff: course.users});
+        });
+    });
+});
+
+router.post('/api/courses/:id/staff', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    if (!req.body.netid) return res.status(400).end();
+    db.Course.find({
+        where: {id: req.params.id}
+    })
+    .success(function(course) {
+        if (!course) return res.status(404).end();
+        course.hasUser(req.user)
+        .success(function(result) {
+            if (!result) return res.status(401).end();
+            db.User.findOrCreate({netid: req.body.netid})
+            .success(function(user) {
+                user.addCourse(course)
+                .success(function() {
+                    res.send(user);
+                });
+            });
+        });
+    });
+});
+
 router.get('/api/courses/:id/sections', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     db.Course.find({
