@@ -24,35 +24,13 @@ passport.use(new LocalStrategy(function(username, password, done) {
         }
 
         db.User.findOrCreate({netid: username})
-        .success(function(user) {
-            if (!user.name) {
-                var client = ldap.createClient({
-                    url: 'ldap://ldap.uiuc.edu:389'
-                });
-                var base = 'dc=uiuc,dc=edu';
-                var opts = {
-                    filter: 'uid=' + user.netid,
-                    scope: 'sub',
-                    sizeLimit: 1
-                };
-                client.search(base, opts, function(err, res) {
-                    res.on('searchEntry', function(entry) {
-                        user.updateAttributes({
-                            name: (entry.object.uiucEduFirstName + ' ' +
-                                   entry.object.uiucEduLastName)
-                        })
-                        .success(function() {
-                            done(null, user);
-                        });
-                    });
-
-                    res.on('error', function() {
-                        done(null, user);
-                    });
-                });
-            } else {
-                done(null, user);
+        .spread(function(user, created) {
+            // If the user was just created, don't call getNameFromLDAP()
+            // because it has already been called by User's afterCreate hook.
+            if (!created && !user.name) {
+                user.getNameFromLDAP();
             }
+            done(null, user);
         });
     });
 }));
