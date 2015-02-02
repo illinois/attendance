@@ -190,7 +190,7 @@ router.get('/api/sections/:id/checkins.csv', function(req, res) {
             .success(function(checkins) {
                 res.attachment(section.name + '.csv');
                 res.write('uin,timestamp\n');
-                async.each(checkins, function(checkin, callback) {
+                async.eachSeries(checkins, function(checkin, callback) {
                     var uin = checkin.uin;
                     var timestamp = checkin.timestamp.toISOString();
                     res.write(uin + ',' + timestamp + '\n');
