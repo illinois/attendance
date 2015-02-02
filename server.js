@@ -78,6 +78,22 @@ router.post('/api/courses', function(req, res) {
     });
 });
 
+router.get('/api/courses/:id', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    db.Course.find({
+        where: {id: req.params.id},
+        include: [db.User, db.Section]
+    })
+    .success(function(course) {
+        if (!course) return res.status(404).end();
+        course.hasUser(req.user)
+        .success(function(result) {
+            if (!result) return res.status(401).end();
+            res.send(course);
+        });
+    });
+});
+
 router.get('/api/courses/:id/sections', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     db.Course.find({
@@ -116,22 +132,6 @@ router.post('/api/courses/:id/sections', function(req, res) {
                     res.send(section);
                 });
             });
-        });
-    });
-});
-
-router.get('/api/courses/:id', function(req, res) {
-    if (!req.isAuthenticated()) return res.status(401).end();
-    db.Course.find({
-        where: {id: req.params.id},
-        include: [db.User, db.Section]
-    })
-    .success(function(course) {
-        if (!course) return res.status(404).end();
-        course.hasUser(req.user)
-        .success(function(result) {
-            if (!result) return res.status(401).end();
-            res.send(course);
         });
     });
 });
