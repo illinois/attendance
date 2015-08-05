@@ -12,11 +12,12 @@ passport.use(new LocalStrategy(function(username, password, done) {
         url: 'ldap://ad.uillinois.edu:389'
     });
 
-    client.starttls(null, null, function(err) {
+    // XXX: Prod server has a problem with the AD server's TLS cert for some
+    // reason. Connect anyway.
+    var tlsOptions = {rejectUnauthorized: false};
+    client.starttls(tlsOptions, null, function(err) {
         var dn = username + '@illinois.edu';
         client.bind(dn, password, function(err, user) {
-            client.unbind();
-
             if (err) {
                 if (err.name === 'InvalidCredentialsError') {
                     return done(null, false);
