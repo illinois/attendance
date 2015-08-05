@@ -9,28 +9,31 @@ var db = require('./models');
  */
 passport.use(new LocalStrategy(function(username, password, done) {
     var client = ldap.createClient({
-        url: 'ldaps://ad.uiuc.edu:636'
+        url: 'ldap://ad.uillinois.edu:389'
     });
 
-    var dn = 'cn=' + username + ',ou=Campus Accounts,dc=ad,dc=uiuc,dc=edu';
-    client.bind(dn, password, function(err, user) {
-        client.unbind();
+    client.starttls(null, null, function(err, user) {
+        var dn = username + '@illinois.edu';
+        client.bind(dn, password, function(err, user) {
+            client.unbind();
 
-        if (err) {
-            if (err.name === 'InvalidCredentialsError') {
-                return done(null, false);
+            if (err) {
+                if (err.name === 'InvalidCredentialsError') {
+                    return done(null, false);
+                }
+                return done(err);
             }
-            return done(err);
-        }
 
-        db.User.findOrCreate({netid: username})
-        .spread(function(user, created) {
-            // If the user was just created, don't call getNameFromLDAP()
-            // because it has already been called by User's afterCreate hook.
-            if (!created && !user.name) {
-                user.getNameFromLDAP();
-            }
-            done(null, user);
+            db.User.findOrCreate({netid: username})
+            .spread(function(user, created) {
+                // If the user was just created, don't call getNameFromLDAP()
+                // because it has already been called by User's afterCreate
+                // hook.
+                if (!created && !user.name) {
+                    user.getNameFromLDAP();
+                }
+                done(null, user);
+            });
         });
     });
 }));

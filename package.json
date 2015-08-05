@@ -23,7 +23,7 @@
         "express": "4.8.x",
         "express-session": "1.7.x",
         "jquery": "2.1.x",
-        "ldapjs": "0.7.x",
+        "ldapjs": "git://github.com/mcavage/node-ldapjs.git#acc1ca8f4314fd9d67561feabc8ce4c235076a5e",
         "marked": "0.3.x",
         "moment": "2.8.x",
         "mysql": "2.4.x",
