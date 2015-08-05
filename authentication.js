@@ -12,7 +12,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
         url: 'ldap://ad.uillinois.edu:389'
     });
 
-    client.starttls(null, null, function(err, user) {
+    client.starttls(null, null, function(err) {
         var dn = username + '@illinois.edu';
         client.bind(dn, password, function(err, user) {
             client.unbind();
