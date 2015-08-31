@@ -275,6 +275,29 @@ router.post('/api/sections/:id/checkins', function(req, res) {
     });
 });
 
+router.get('/api/courses/:id/checkins/:uin', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    db.Course.find({
+        where: {id: req.params.id}
+    })
+    .success(function(course) {
+        course.hasUser(req.user)
+        .success(function(result) {
+            if (!result) return res.status(401).end();
+            db.Checkin.findAll({
+                where: {
+                    uin: req.params.uin,
+                    'Section.CourseId': req.params.id
+                },
+                include: [db.Section]
+            })
+            .success(function(checkins) {
+                res.send({checkins: checkins});
+            });
+        });
+    });
+});
+
 router.get('/api/sections/:id/comments', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     db.Section.find({
