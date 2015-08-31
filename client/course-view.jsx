@@ -6,6 +6,7 @@ var $ = require('jquery');
 var baseUrl = require('../baseurl');
 var NewSectionForm = require('./new-section-form.jsx');
 var AddStaffForm = require('./add-staff-form.jsx');
+var StudentLookupForm = require('./student-lookup-form.jsx');
 
 var CourseView = React.createClass({
     propTypes: {
@@ -15,7 +16,8 @@ var CourseView = React.createClass({
 
     getInitialState: function() {
         return {
-            course: null
+            course: null,
+            checkins: []
         };
     },
 
@@ -45,6 +47,10 @@ var CourseView = React.createClass({
         this.setState({course: newCourse});
     },
 
+    handleStudentLookup: function(result) {
+        this.setState({checkins: result.checkins});
+    },
+
     handleAddStaff: function(user) {
         var newCourse = React.addons.update(
             this.state.course,
@@ -61,9 +67,16 @@ var CourseView = React.createClass({
             body = <div>Loading...</div>;
         } else {
             var sections = course.sections.map(function(section) {
+                var highlight = this.state.checkins.some(function(checkin) {
+                    return checkin.SectionId == section.id;
+                });
+                var classes = React.addons.classSet({
+                    'list-group-item': true,
+                    'list-group-item-success': highlight
+                });
                 return <a
                     href={baseUrl + '/sections/' + section.id}
-                    className="list-group-item"
+                    className={classes}
                     onClick={this.props.handleNav}
                     key={section.id}>
                     {section.name}
@@ -78,6 +91,9 @@ var CourseView = React.createClass({
             body = <div>
                 <h1>{this.state.course.name}</h1>
                 <h2>Sections</h2>
+                <StudentLookupForm
+                    courseId={this.props.id}
+                    onStudentLookup={this.handleStudentLookup} />
                 <ul className="list-group">
                     {sections}
                 </ul>
