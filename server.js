@@ -226,7 +226,7 @@ router.get('/api/sections/:id/checkins.csv', function(req, res) {
             );
             db.sequelize.query(query, null, {raw: true}, [req.params.id])
             .success(function(checkins) {
-                res.attachment(section.name + '.csv');
+                res.attachment(section.name.replace(/\//g, '-') + '.csv');
                 res.write('uin,timestamp\n');
                 async.eachSeries(checkins, function(checkin, callback) {
                     var uin = checkin.uin;
