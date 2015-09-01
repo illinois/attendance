@@ -15,5 +15,6 @@ lint:
 
 test:
 	@npm test
+	@npm run testbuild
 
 .PHONY: build serve install clean lint test
