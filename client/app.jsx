@@ -107,6 +107,7 @@ var App = React.createClass({
 
     // onClick handler for <a> tags
     handleNav: function(e) {
+        e.preventDefault();
         if (!this.state.user) {
             this.navigateTo('/login');
         } else {
@@ -115,7 +116,6 @@ var App = React.createClass({
             var path = e.currentTarget.pathname;
             this.navigateTo(path.replace(baseUrlRe, ''));
         }
-        return false;
     },
 
     navigateTo: function(path) {

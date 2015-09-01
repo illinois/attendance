@@ -44,9 +44,10 @@ var CheckinForm = React.createClass({
         this.setState({swipeData: e.target.value});
     },
 
-    handleSubmit: function() {
+    handleSubmit: function(e) {
+        e.preventDefault();
         if (!this.state.swipeData) {
-            return false;
+            return;
         }
 
         var id = this.props.sectionId;
@@ -80,7 +81,6 @@ var CheckinForm = React.createClass({
                 message: message
             });
         }.bind(this));
-        return false;
     },
 
     render: function() {

@@ -34,7 +34,8 @@ var LoginView = React.createClass({
         this.setState({password: e.target.value});
     },
 
-    handleLogin: function() {
+    handleLogin: function(e) {
+        e.preventDefault();
         this.setState({disabled: true});
         var request = $.ajax({
             type: 'POST',
@@ -54,7 +55,6 @@ var LoginView = React.createClass({
                 password: ''
             });
         }.bind(this));
-        return false;
     },
 
     render: function() {

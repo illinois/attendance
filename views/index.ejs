@@ -13,8 +13,8 @@
         </div>
         <script src="<%= baseUrl %>/app.js"></script>
         <script>
-            React.renderComponent(
-                App({
+            React.render(
+                React.createElement(App, {
                     initialUser: <%- user ? JSON.stringify(user) : 'null' %>
                 }),
                 document.getElementById('main')

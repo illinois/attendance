@@ -20,7 +20,6 @@ var NewSectionForm = React.createClass({
 
     handleExpand: function() {
         this.setState({expanded: true});
-        return false;
     },
 
     componentDidUpdate: function(prevProps, prevState) {
@@ -33,9 +32,10 @@ var NewSectionForm = React.createClass({
         this.setState({sectionName: e.target.value});
     },
 
-    handleSubmit: function() {
+    handleSubmit: function(e) {
+        e.preventDefault();
         if (!this.state.sectionName) {
-            return false;
+            return;
         }
 
         var id = this.props.courseId;
@@ -48,7 +48,6 @@ var NewSectionForm = React.createClass({
             this.props.onCreateSection(result);
             this.setState({expanded: false, sectionName: ''});
         }.bind(this));
-        return false;
     },
 
     render: function() {

@@ -26,9 +26,10 @@ var StudentLookupForm = React.createClass({
         this.setState({swipeData: e.target.value});
     },
 
-    handleSubmit: function() {
+    handleSubmit: function(e) {
+        e.preventDefault();
         if (!this.state.swipeData) {
-            return false;
+            return;
         }
 
         var id = this.props.courseId;
@@ -38,7 +39,6 @@ var StudentLookupForm = React.createClass({
             this.props.onStudentLookup(result);
             this.setState({swipeData: ''});
         }.bind(this));
-        return false;
     },
 
     render: function() {

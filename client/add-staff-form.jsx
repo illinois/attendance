@@ -18,9 +18,8 @@ var AddStaffForm = React.createClass({
         };
     },
 
-    handleExpand: function() {
+    handleExpand: function(e) {
         this.setState({expanded: true});
-        return false;
     },
 
     componentDidUpdate: function(prevProps, prevState) {
@@ -33,9 +32,10 @@ var AddStaffForm = React.createClass({
         this.setState({netid: e.target.value});
     },
 
-    handleSubmit: function() {
+    handleSubmit: function(e) {
+        e.preventDefault();
         if (!this.state.netid) {
-            return false;
+            return;
         }
 
         var id = this.props.courseId;
@@ -48,7 +48,6 @@ var AddStaffForm = React.createClass({
             this.props.onAddStaff(result);
             this.setState({netid: ''});
         }.bind(this));
-        return false;
     },
 
     render: function() {

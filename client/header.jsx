@@ -1,7 +1,8 @@
 /** @jsx React.DOM */
 
-var React = require('react/addons');
+var React = require('react');
 var $ = require('jquery');
+var classNames = require('classnames');
 
 var baseUrl = require('../baseurl');
 
@@ -17,14 +18,14 @@ var Header = React.createClass({
         logout: React.PropTypes.func.isRequired
     },
 
-    handleLogout: function() {
+    handleLogout: function(e) {
+        e.preventDefault();
         $.ajax({
             type: 'DELETE',
             url: baseUrl + '/api/session'
         }).done(function() {
             this.props.logout();
         }.bind(this));
-        return false;
     },
 
     render: function() {
@@ -93,7 +94,7 @@ var NavItem = React.createClass({
     render: function() {
         var routeName = this.props.routeName;
         var currentRoute = this.props.currentRoute;
-        var classes = React.addons.classSet({
+        var classes = classNames({
             'active': this.props.routeName === this.props.currentRoute
         });
         return <li className={classes}>

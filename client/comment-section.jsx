@@ -45,9 +45,10 @@ var CommentSection = React.createClass({
         }, 0);
     },
 
-    handleSubmit: function() {
+    handleSubmit: function(e) {
+        e.preventDefault();
         if (!this.state.commentText) {
-            return false;
+            return;
         }
         this.setState({disabled: true});
 
@@ -69,8 +70,6 @@ var CommentSection = React.createClass({
                 disabled: false
             });
         }.bind(this));
-
-        return false;
     },
 
     render: function() {

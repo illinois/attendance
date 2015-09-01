@@ -1,7 +1,8 @@
 /** @jsx React.DOM */
 
-var React = require('react/addons');
+var React = require('react');
 var $ = require('jquery');
+var classNames = require('classnames');
 
 var baseUrl = require('../baseurl');
 var NewSectionForm = require('./new-section-form.jsx');
@@ -70,8 +71,7 @@ var CourseView = React.createClass({
                 var highlight = this.state.checkins.some(function(checkin) {
                     return checkin.SectionId == section.id;
                 });
-                var classes = React.addons.classSet({
-                    'list-group-item': true,
+                var classes = classNames('list-group-item', {
                     'list-group-item-success': highlight
                 });
                 return <a
