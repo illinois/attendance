@@ -59,7 +59,6 @@ var CommentSection = React.createClass({
             data: {text: this.state.commentText}
         })
         .done(function(result) {
-            console.log(result);
             var newComments = React.addons.update(
                 this.state.comments,
                 {$push: [result]}
