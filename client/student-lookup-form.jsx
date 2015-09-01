@@ -4,7 +4,7 @@ var React = require('react');
 var $ = require('jquery');
 
 var baseUrl = require('../baseurl');
-var parseSwipe = require('../parse-swipe')
+var parseSwipe = require('../parse-swipe');
 
 var StudentLookupForm = React.createClass({
     propTypes: {
