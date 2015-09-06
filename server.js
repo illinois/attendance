@@ -291,7 +291,23 @@ router.post('/api/sections/:id/checkins', function(req, res) {
                     .success(function() {
                         section.addCheckin(checkin)
                         .success(function() {
-                            res.send(checkin);
+                            checkin = checkin.values;
+                            db.Student.find({
+                                where: {
+                                    CourseId: section.CourseId,
+                                    uin: checkin.uin
+                                }
+                            })
+                            .success(function(student) {
+                                if (student) {
+                                    checkin.netid = student.netid;
+                                    checkin.fullName = student.fullName;
+                                } else {
+                                    checkin.netid = '';
+                                    checkin.fullName = '';
+                                }
+                                res.send(checkin);
+                            });
                         });
                     });
                 });
