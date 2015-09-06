@@ -92,8 +92,14 @@ var CheckinForm = React.createClass({
         }
 
         var lastSwipes = this.state.lastSwipes.map(function(swipe) {
+            var text;
+            if (swipe.netid) {
+                text = swipe.fullName + ' (' + swipe.netid + ')';
+            } else {
+                text = swipe.uin;
+            }
             return <li className="list-group-item" key={swipe.id}>
-                {swipe.uin}
+                {text}
                 <span style={{color: '#aaa', float: 'right'}}>
                     {moment(swipe.createdAt).fromNow()}
                 </span>

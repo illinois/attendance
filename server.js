@@ -204,7 +204,26 @@ router.get('/api/sections/:id/checkins', function(req, res) {
                 limit: last ? 5 : null
             })
             .success(function(checkins) {
-                res.send({checkins: checkins});
+                checkins = checkins.map(function(checkin) {
+                    return checkin.values;
+                });
+                async.each(checkins, function(checkin, callback) {
+                    db.Student.find({
+                        where: {CourseId: section.CourseId, uin: checkin.uin}
+                    })
+                    .success(function(student) {
+                        if (student) {
+                            checkin.netid = student.netid;
+                            checkin.fullName = student.fullName;
+                        } else {
+                            checkin.netid = '';
+                            checkin.fullName = '';
+                        }
+                        callback();
+                    });
+                }, function() {
+                    res.send({checkins: checkins});
+                });
             });
         });
     });
@@ -220,18 +239,24 @@ router.get('/api/sections/:id/checkins.csv', function(req, res) {
         section.hasUser(req.user, function(err, result) {
             if (!result) return res.status(401).end();
             var query = (
-                'SELECT uin, createdAt as timestamp ' +
-                'FROM Checkins WHERE SectionId=? ' +
-                'ORDER BY timestamp'
+                'SELECT Checkins.uin, Students.netid, ' +
+                'Checkins.createdAt AS timestamp ' +
+                'FROM Checkins ' +
+                'JOIN Sections ON Checkins.SectionId = Sections.id ' +
+                'LEFT JOIN Students ON ' +
+                'Students.CourseId = Sections.CourseId ' +
+                'AND Students.uin = Checkins.uin ' +
+                'WHERE SectionId = 1 ORDER BY timestamp'
             );
             db.sequelize.query(query, null, {raw: true}, [req.params.id])
             .success(function(checkins) {
                 res.attachment(section.name.replace(/\//g, '-') + '.csv');
-                res.write('uin,timestamp\n');
+                res.write('uin,netid,timestamp\n');
                 async.eachSeries(checkins, function(checkin, callback) {
                     var uin = checkin.uin;
+                    var netid = checkin.netid || '';
                     var timestamp = checkin.timestamp.toISOString();
-                    res.write(uin + ',' + timestamp + '\n');
+                    res.write(uin + ',' + netid + ',' + timestamp + '\n');
                     callback();
                 }, function() {
                     res.end();
