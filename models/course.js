@@ -7,6 +7,7 @@ module.exports = function(sequelize, DataTypes) {
             associate: function(models) {
                 Course.hasMany(models.User);
                 Course.hasMany(models.Section);
+                Course.hasMany(models.Student);
             }
         }
     });
