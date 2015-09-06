@@ -246,7 +246,7 @@ router.get('/api/sections/:id/checkins.csv', function(req, res) {
                 'LEFT JOIN Students ON ' +
                 'Students.CourseId = Sections.CourseId ' +
                 'AND Students.uin = Checkins.uin ' +
-                'WHERE SectionId = 1 ORDER BY timestamp'
+                'WHERE SectionId = ? ORDER BY timestamp'
             );
             db.sequelize.query(query, null, {raw: true}, [req.params.id])
             .success(function(checkins) {
