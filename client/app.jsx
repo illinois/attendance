@@ -2,11 +2,11 @@
 
 var React = require('react');
 var Backbone = require('backbone');
-var $ = Backbone.$ = require('jquery');
+var $ = require('jquery');
 
 // Enable React Developer Tools
 window.React = React;
-window.$ = $;
+window.$ = window.jQuery = Backbone.$ = $;
 
 var baseUrl = require('../baseurl');
 var Header = require('./header.jsx');
