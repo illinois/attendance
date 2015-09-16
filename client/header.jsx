@@ -20,12 +20,22 @@ var Header = React.createClass({
 
     handleLogout: function(e) {
         e.preventDefault();
+        $('#navbar').collapse('hide');
         $.ajax({
             type: 'DELETE',
             url: baseUrl + '/api/session'
         }).done(function() {
             this.props.logout();
         }.bind(this));
+    },
+
+    /**
+     * Wrapper for handleNav with the added functionality of collapsing the
+     * navbar if on mobile.
+     */
+    handleNavAndCollapse: function() {
+        $('#navbar').collapse('hide');
+        this.props.handleNav.apply(this, arguments);
     },
 
     render: function() {
@@ -42,7 +52,7 @@ var Header = React.createClass({
                 routeName="login"
                 currentRoute={this.props.currentRoute}
                 href={baseUrl + '/login'}
-                handleNav={this.props.handleNav}>
+                handleNav={this.handleNavAndCollapse}>
                 Login
             </NavItem>;
         }
@@ -52,32 +62,48 @@ var Header = React.createClass({
             role="navigation">
             <div className="container">
                 <div className="navbar-header">
-                    <a
-                        className="navbar-brand"
-                        href={baseUrl + '/'}
-                        onClick={this.props.handleNav}>
-                        Attendance
-                    </a>
+                    <button
+                        type="button"
+                        className="navbar-toggle collapsed"
+                        data-toggle="collapse"
+                        data-target="#navbar"
+                        aria-expanded="false"
+                        aria-controls="navbar">
+                        <span className="sr-only">Toggle navigation</span>
+                        <span className="icon-bar"></span>
+                        <span className="icon-bar"></span>
+                        <span className="icon-bar"></span>
+                    </button>
+                    <div className="navbar-header">
+                        <a
+                            className="navbar-brand"
+                            href={baseUrl + '/'}
+                            onClick={this.handleNavAndCollapse}>
+                            Attendance
+                        </a>
+                    </div>
                 </div>
-                <ul className="nav navbar-nav">
-                    <NavItem
-                        routeName="home"
-                        currentRoute={this.props.currentRoute}
-                        href={baseUrl + '/'}
-                        handleNav={this.props.handleNav}>
-                        Home
-                    </NavItem>
-                    <NavItem
-                        routeName="about"
-                        currentRoute={this.props.currentRoute}
-                        href={baseUrl + '/about'}
-                        handleNav={this.props.handleNav}>
-                        About
-                    </NavItem>
-                </ul>
-                <ul className="nav navbar-nav navbar-right">
-                    {userNavItem}
-                </ul>
+                <div id="navbar" className="collapse navbar-collapse">
+                    <ul className="nav navbar-nav">
+                        <NavItem
+                            routeName="home"
+                            currentRoute={this.props.currentRoute}
+                            href={baseUrl + '/'}
+                            handleNav={this.handleNavAndCollapse}>
+                            Home
+                        </NavItem>
+                        <NavItem
+                            routeName="about"
+                            currentRoute={this.props.currentRoute}
+                            href={baseUrl + '/about'}
+                            handleNav={this.handleNavAndCollapse}>
+                            About
+                        </NavItem>
+                    </ul>
+                    <ul className="nav navbar-nav navbar-right">
+                        {userNavItem}
+                    </ul>
+                </div>
             </div>
         </nav>;
     }
