@@ -107,7 +107,7 @@ var CheckinForm = React.createClass({
         });
 
         return <div className="row">
-            <div className="col-md-4">
+            <div className="col-md-6">
                 {alert}
                 <p>Swipe i-card or enter UIN</p>
                 <form onSubmit={this.handleSubmit}>
