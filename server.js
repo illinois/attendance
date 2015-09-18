@@ -1,5 +1,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var multer = require('multer');
+var storage = multer.memoryStorage();
+var upload = multer({storage: storage});
 var session = require('express-session');
 var MySQLStore = require('connect-mysql')(session);
 var async = require('async');
@@ -9,6 +12,7 @@ var config = require('./config');
 var passport = require('./authentication');
 var db = require('./models');
 var parseSwipe = require('./parse-swipe');
+var importRoster = require('./import-roster');
 
 var NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -127,6 +131,31 @@ router.post('/api/courses/:id/staff', function(req, res) {
                 .success(function() {
                     res.send(user);
                 });
+            });
+        });
+    });
+});
+
+router.post('/api/courses/:id/roster',
+            upload.single('roster'),
+            function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    db.Course.find({
+        where: {id: req.params.id}
+    })
+    .success(function(course) {
+        if (!course) return res.status(404).end();
+        course.hasUser(req.user)
+        .success(function(result) {
+            if (!result) return res.status(403).end();
+            if (!req.file) return res.status(400).end();
+            var roster = req.file.buffer.toString();
+            importRoster(roster, req.params.id, function(numAdded) {
+                if (numAdded === 0) {
+                    res.status(400).end();
+                } else {
+                    res.send({numAdded: numAdded});
+                }
             });
         });
     });
