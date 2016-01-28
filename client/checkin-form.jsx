@@ -110,7 +110,9 @@ var CheckinForm = React.createClass({
             <div className="col-md-6">
                 {alert}
                 <p>Swipe i-card or enter UIN</p>
-                <form onSubmit={this.handleSubmit}>
+                <form
+                    onSubmit={this.handleSubmit}
+                    autoComplete="off">
                     <input
                         type="text"
                         className="form-control input-lg"
