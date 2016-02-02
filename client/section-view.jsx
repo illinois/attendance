@@ -48,15 +48,25 @@ var SectionView = React.createClass({
                 onClick={this.props.handleNav}>
                 &laquo; Back to course
             </a>
-            <h1>{this.state.section.name}</h1>
-            <CheckinForm sectionId={id} />
-            <a
-                href={baseUrl + '/api/sections/' + id + '/checkins.csv'}
-                className="btn btn-default"
-                download>
-                Export to CSV
-            </a>
-            <CommentSection sectionId={id} />
+            <div className="row">
+                <div className="col-md-12">
+                    <h1>{this.state.section.name}</h1>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-md-6">
+                    <CheckinForm sectionId={id} />
+                    <a
+                        href={baseUrl + '/api/sections/' + id + '/checkins.csv'}
+                        className="btn btn-default"
+                        download>
+                        Export to CSV
+                    </a>
+                </div>
+                <div className="col-md-6">
+                    <CommentSection sectionId={id} />
+                </div>
+            </div>
         </div>;
     }
 });

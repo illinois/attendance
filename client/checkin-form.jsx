@@ -100,16 +100,18 @@ var CheckinForm = React.createClass({
             }
             return <li className="list-group-item" key={swipe.id}>
                 {text}
-                <span style={{color: '#aaa', float: 'right'}}>
+                <span className="swipe-timestamp">
                     {moment(swipe.createdAt).fromNow()}
                 </span>
             </li>;
         });
 
-        return <div className="row">
-            <div className="col-md-6">
+        return <div>
+            <div className="well">
+                <legend className="checkin-form-label">
+                    Swipe i-card or enter UIN
+                </legend>
                 {alert}
-                <p>Swipe i-card or enter UIN</p>
                 <form
                     onSubmit={this.handleSubmit}
                     autoComplete="off">
@@ -121,11 +123,11 @@ var CheckinForm = React.createClass({
                         value={this.state.swipeData}
                         onChange={this.handleSwipeDataChange} />
                 </form>
-                <h2>Last swipes</h2>
-                <ul className="list-group">
-                    {lastSwipes}
-                </ul>
             </div>
+            <h2>Last swipes</h2>
+            <ul className="list-group">
+                {lastSwipes}
+            </ul>
         </div>;
     }
 });

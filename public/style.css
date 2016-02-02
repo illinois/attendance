@@ -1,0 +1,39 @@
+/* Checkin form */
+.checkin-form-label {
+    font-size: 18px;
+}
+
+/* Last swipes */
+.swipe-timestamp {
+    color: #aaa;
+    float: right;
+}
+
+/* Comment */
+@media (min-width: 992px) {
+    .comment-section-heading {
+        margin-top: 0px;
+    }
+}
+
+.comment {
+    margin-bottom: 25px;
+    border: 1px;
+}
+
+.comment > .comment-header {
+    margin-bottom: 5px;
+}
+
+.comment > .comment-header > .comment-name {
+    font-weight: bold;
+}
+
+.comment > .comment-header > .comment-netid {
+    margin-left: 5px;
+}
+
+.comment > .comment-header > .comment-timestamp {
+    margin-left: 5px;
+    color: #aaa;
+}

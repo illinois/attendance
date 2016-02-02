@@ -74,7 +74,7 @@ var CommentSection = React.createClass({
     render: function() {
         if (this.state.loading) {
             return <div>
-                <h2>Comments</h2>
+                <h2 className="comment-section-heading">Comments</h2>
                 Loading...
             </div>;
         }
@@ -83,12 +83,17 @@ var CommentSection = React.createClass({
             var time = moment(comment.createdAt).calendar();
             var textHTML = marked(comment.text);
 
-            // TODO(klwang3): Remove inline styling
-            return <div key={comment.id} style={{paddingBottom: '20px'}}>
-                <div style={{paddingBottom: '5px'}}>
-                    <strong>{comment.user.name}</strong> ({comment.user.netid})
-                    {' '}
-                    <span style={{color: '#aaa'}}>{time}</span>
+            return <div key={comment.id} className="comment">
+                <div className="comment-header">
+                    <span className="comment-name">
+                        {comment.user.name}
+                    </span>
+                    <span className="comment-netid">
+                        ({comment.user.netid})
+                    </span>
+                    <span className="comment-timestamp">
+                        {time}
+                    </span>
                 </div>
                 <div dangerouslySetInnerHTML={{__html: textHTML}} />
             </div>;
@@ -103,28 +108,26 @@ var CommentSection = React.createClass({
             </div>;
         }
 
-        return <div className="row">
-            <div className="col-md-6">
-                <h2>Comments</h2>
-                {comments}
-                {preview}
-                <form onSubmit={this.handleSubmit}>
-                    <div className="form-group">
-                        <textarea
-                            className="form-control"
-                            value={this.state.commentText}
-                            onChange={this.handleCommentTextChange}
-                            required />
-                    </div>
-                    <div className="form-group">
-                        <input
-                            type="submit"
-                            className="btn btn-default"
-                            value="Post"
-                            disabled={this.state.disabled} />
-                    </div>
-                </form>
-            </div>
+        return <div>
+            <h2 className="comment-section-heading">Comments</h2>
+            {comments}
+            {preview}
+            <form onSubmit={this.handleSubmit}>
+                <div className="form-group">
+                    <textarea
+                        className="form-control"
+                        value={this.state.commentText}
+                        onChange={this.handleCommentTextChange}
+                        required />
+                </div>
+                <div className="form-group">
+                    <input
+                        type="submit"
+                        className="btn btn-default"
+                        value="Post"
+                        disabled={this.state.disabled} />
+                </div>
+            </form>
         </div>;
     }
 });
