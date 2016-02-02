@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
-var React = require('react/addons');
+var React = require('react');
+var update = require('react-addons-update');
 var $ = require('jquery');
 var moment = require('moment');
 var marked = require('marked');
@@ -59,7 +60,7 @@ var CommentSection = React.createClass({
             data: {text: this.state.commentText}
         })
         .done(function(result) {
-            var newComments = React.addons.update(
+            var newComments = update(
                 this.state.comments,
                 {$push: [result]}
             );

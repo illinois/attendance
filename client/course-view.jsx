@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var update = require('react-addons-update');
 var $ = require('jquery');
 var classNames = require('classnames');
 
@@ -41,7 +42,7 @@ var CourseView = React.createClass({
 
     // Add the new course to the section list.
     handleNewSection: function(section) {
-        var newCourse = React.addons.update(
+        var newCourse = update(
             this.state.course,
             {sections: {$push: [section]}}
         );
@@ -53,7 +54,7 @@ var CourseView = React.createClass({
     },
 
     handleAddStaff: function(user) {
-        var newCourse = React.addons.update(
+        var newCourse = update(
             this.state.course,
             {users: {$push: [user]}}
         );

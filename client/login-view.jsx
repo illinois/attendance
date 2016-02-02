@@ -23,7 +23,7 @@ var LoginView = React.createClass({
     },
 
     componentDidMount: function() {
-        this.refs.username.getDOMNode().focus();
+        this.refs.username.focus();
     },
 
     handleUsernameChange: function(e) {

@@ -14,7 +14,7 @@
         </div>
         <script src="<%= baseUrl %>/app.js"></script>
         <script>
-            React.render(
+            ReactDOM.render(
                 React.createElement(App, {
                     initialUser: <%- user ? JSON.stringify(user) : 'null' %>
                 }),

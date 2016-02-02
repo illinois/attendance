@@ -24,7 +24,7 @@ var AddStaffForm = React.createClass({
 
     componentDidUpdate: function(prevProps, prevState) {
         if (this.state.expanded && !prevState.expanded) {
-            this.refs.netid.getDOMNode().focus();
+            this.refs.netid.focus();
         }
     },
 

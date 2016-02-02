@@ -24,7 +24,7 @@ var NewSectionForm = React.createClass({
 
     componentDidUpdate: function(prevProps, prevState) {
         if (this.state.expanded && !prevState.expanded) {
-            this.refs.sectionName.getDOMNode().focus();
+            this.refs.sectionName.focus();
         }
     },
 

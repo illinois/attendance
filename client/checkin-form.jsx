@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
-var React = require('react/addons');
+var React = require('react');
+var update = require('react-addons-update');
 var $ = require('jquery');
 var moment = require('moment');
 
@@ -23,7 +24,7 @@ var CheckinForm = React.createClass({
     },
 
     componentDidMount: function() {
-        this.refs.swipeData.getDOMNode().focus();
+        this.refs.swipeData.focus();
 
         // Populate "Last swipes" section
         var id  = this.props.sectionId;
@@ -57,7 +58,7 @@ var CheckinForm = React.createClass({
             data: {swipeData: this.state.swipeData}
         })
         .done(function(result) {
-            var newLastSwipes = React.addons.update(
+            var newLastSwipes = update(
                 this.state.lastSwipes,
                 {$unshift: [result]}
             ).slice(0, 5);

@@ -1,11 +1,13 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var ReactDOM = require('react-dom');
 var Backbone = require('backbone');
 var $ = require('jquery');
 
 // Enable React Developer Tools
 window.React = React;
+window.ReactDOM = ReactDOM;
 window.$ = window.jQuery = Backbone.$ = $;
 
 var baseUrl = require('../baseurl');

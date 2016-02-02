@@ -19,7 +19,7 @@ var StudentLookupForm = React.createClass({
     },
 
     componentDidMount: function() {
-        this.refs.swipeData.getDOMNode().focus();
+        this.refs.swipeData.focus();
     },
 
     handleSwipeDataChange: function(e) {
