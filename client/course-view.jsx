@@ -77,27 +77,35 @@ var CourseView = React.createClass({
             }.bind(this));
 
             body = <div>
-                <h1>{this.state.course.name}</h1>
-                <h2>Sections</h2>
-                <StudentLookupForm
-                    courseId={this.props.id}
-                    onStudentLookup={this.handleStudentLookup} />
-                <ul className="list-group">
-                    {sections}
-                </ul>
-                <NewSectionForm
-                    courseId={this.props.id}
-                    onCreateSection={this.handleNewSection} />
-                <h2>Staff</h2>
-                <StaffList
-                    courseId={this.props.id}
-                    initialStaff={course.users} />
+                <div className="row">
+                    <div className="col-md-12">
+                        <h1>{this.state.course.name}</h1>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-8">
+                        <h2>Sections</h2>
+                        <StudentLookupForm
+                            courseId={this.props.id}
+                            onStudentLookup={this.handleStudentLookup} />
+                        <ul className="list-group">
+                            {sections}
+                        </ul>
+                        <NewSectionForm
+                            courseId={this.props.id}
+                            onCreateSection={this.handleNewSection} />
+                    </div>
+                    <div className="col-md-4">
+                        <h2>Staff</h2>
+                        <StaffList
+                            courseId={this.props.id}
+                            initialStaff={course.users} />
+                    </div>
+                </div>
             </div>;
         }
 
-        return <div>
-            {body}
-        </div>;
+        return body;
     }
 });
 
