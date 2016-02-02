@@ -36,6 +36,7 @@
         "passport-local": "1.0.x",
         "react": "0.14.x",
         "react-addons-update": "0.14.x",
+        "react-bootstrap": "0.28.x",
         "react-dom": "0.14.x",
         "reactify": "1.1.x",
         "sequelize": "1.7.x",

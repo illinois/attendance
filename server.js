@@ -136,6 +136,25 @@ router.post('/api/courses/:id/staff', function(req, res) {
     });
 });
 
+router.delete('/api/courses/:courseId/staff/:userId', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    db.Course.find({
+        where: {id: req.params.courseId}
+    })
+    .success(function(course) {
+        if (!course) return res.status(404).end();
+        db.User.find({
+            where: {id: req.params.userId}
+        })
+        .success(function(user) {
+            course.removeUser(user)
+            .success(function() {
+                res.send(200);
+            });
+        });
+    });
+});
+
 router.post('/api/courses/:id/roster',
             upload.single('roster'),
             function(req, res) {

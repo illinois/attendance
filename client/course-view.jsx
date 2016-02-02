@@ -7,7 +7,7 @@ var classNames = require('classnames');
 
 var baseUrl = require('../baseurl');
 var NewSectionForm = require('./new-section-form.jsx');
-var AddStaffForm = require('./add-staff-form.jsx');
+var StaffList = require('./staff-list.jsx');
 var StudentLookupForm = require('./student-lookup-form.jsx');
 
 var CourseView = React.createClass({
@@ -53,14 +53,6 @@ var CourseView = React.createClass({
         this.setState({checkins: result.checkins});
     },
 
-    handleAddStaff: function(user) {
-        var newCourse = update(
-            this.state.course,
-            {users: {$push: [user]}}
-        );
-        this.setState({course: newCourse});
-    },
-
     render: function() {
         var course = this.state.course;
 
@@ -83,11 +75,6 @@ var CourseView = React.createClass({
                     {section.name}
                 </a>;
             }.bind(this));
-            var staff = course.users.map(function(user) {
-                return <div key={user.id}>
-                    {user.name} ({user.netid})
-                </div>;
-            });
 
             body = <div>
                 <h1>{this.state.course.name}</h1>
@@ -102,10 +89,9 @@ var CourseView = React.createClass({
                     courseId={this.props.id}
                     onCreateSection={this.handleNewSection} />
                 <h2>Staff</h2>
-                {staff}
-                <AddStaffForm
+                <StaffList
                     courseId={this.props.id}
-                    onAddStaff={this.handleAddStaff} />
+                    initialStaff={course.users} />
             </div>;
         }
 
