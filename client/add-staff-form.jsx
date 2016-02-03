@@ -51,17 +51,15 @@ var AddStaffForm = React.createClass({
     },
 
     render: function() {
+        var body;
         if (!this.state.expanded) {
-            return <div>
-                <button
-                    className="btn btn-default"
-                    onClick={this.handleExpand}>
-                    Add staff
-                </button>
-            </div>;
-        }
-        return <div>
-            <form onSubmit={this.handleSubmit}>
+            body = <button
+                className="btn btn-default"
+                onClick={this.handleExpand}>
+                Add staff
+            </button>;
+        } else {
+            body = <form onSubmit={this.handleSubmit}>
                 <input
                     type="text"
                     className="form-control"
@@ -70,7 +68,11 @@ var AddStaffForm = React.createClass({
                     placeholder="NetID"
                     value={this.state.netid}
                     onChange={this.handleNetIDChange} />
-            </form>
+            </form>;
+        }
+
+        return <div className="add-staff-form">
+            {body}
         </div>;
     }
 });

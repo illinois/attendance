@@ -85,10 +85,7 @@ var CourseView = React.createClass({
                 <div className="row">
                     <div className="col-md-8">
                         <h2>Sections</h2>
-                        <StudentLookupForm
-                            courseId={this.props.id}
-                            onStudentLookup={this.handleStudentLookup} />
-                        <ul className="list-group">
+                        <ul className="list-group section-list">
                             {sections}
                         </ul>
                         <NewSectionForm
@@ -96,6 +93,10 @@ var CourseView = React.createClass({
                             onCreateSection={this.handleNewSection} />
                     </div>
                     <div className="col-md-4">
+                        <h2>Check attendance</h2>
+                        <StudentLookupForm
+                            courseId={this.props.id}
+                            onStudentLookup={this.handleStudentLookup} />
                         <h2>Staff</h2>
                         <StaffList
                             courseId={this.props.id}

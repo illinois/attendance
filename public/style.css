@@ -37,3 +37,13 @@
     margin-left: 5px;
     color: #aaa;
 }
+
+/* Section list */
+.section-list.list-group {
+    margin-bottom: 10px;
+}
+
+/* Add staff form */
+.add-staff-form {
+    margin-top: 10px;
+}
