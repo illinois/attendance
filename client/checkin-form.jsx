@@ -75,7 +75,7 @@ var CheckinForm = React.createClass({
                 var timeAgo = moment(checkin.createdAt).fromNow();
                 message = 'Already checked in ' + timeAgo;
             } else {
-                message = 'Invalid swipe';
+                message = 'Invalid swipe/UIN or unknown NetID';
             }
             this.setState({
                 swipeData: '',
@@ -110,7 +110,7 @@ var CheckinForm = React.createClass({
         return <div>
             <div className="well">
                 <legend className="checkin-form-label">
-                    Swipe i-card or enter UIN
+                    Swipe i-card or enter UIN/NetID
                 </legend>
                 {alert}
                 <form

@@ -318,43 +318,43 @@ router.post('/api/sections/:id/checkins', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     if (!req.body.swipeData) return res.status(400).end();
 
-    var uin = parseSwipe(req.body.swipeData);
-    if (!uin) return res.status(400).end();
-
     db.Section.find({
         where: {id: req.params.id}
     })
     .success(function(section) {
         if (!section) return res.status(404).end();
-        section.hasUser(req.user, function(err, result) {
-            if (!result) return res.status(403).end();
-            db.Checkin.find({
-                where: {SectionId: req.params.id, uin: uin}
-            })
-            .success(function(checkin) {
-                if (checkin) return res.status(409).send(checkin);
-                db.Checkin.create({uin: uin})
+        parseSwipe(req.body.swipeData, section.CourseId, function(uin) {
+            if (!uin) return res.status(400).end();
+            section.hasUser(req.user, function(err, result) {
+                if (!result) return res.status(403).end();
+                db.Checkin.find({
+                    where: {SectionId: req.params.id, uin: uin}
+                })
                 .success(function(checkin) {
-                    checkin.setUser(req.user)
-                    .success(function() {
-                        section.addCheckin(checkin)
+                    if (checkin) return res.status(409).send(checkin);
+                    db.Checkin.create({uin: uin})
+                    .success(function(checkin) {
+                        checkin.setUser(req.user)
                         .success(function() {
-                            checkin = checkin.values;
-                            db.Student.find({
-                                where: {
-                                    CourseId: section.CourseId,
-                                    uin: checkin.uin
-                                }
-                            })
-                            .success(function(student) {
-                                if (student) {
-                                    checkin.netid = student.netid;
-                                    checkin.fullName = student.fullName;
-                                } else {
-                                    checkin.netid = '';
-                                    checkin.fullName = '';
-                                }
-                                res.send(checkin);
+                            section.addCheckin(checkin)
+                            .success(function() {
+                                checkin = checkin.values;
+                                db.Student.find({
+                                    where: {
+                                        CourseId: section.CourseId,
+                                        uin: checkin.uin
+                                    }
+                                })
+                                .success(function(student) {
+                                    if (student) {
+                                        checkin.netid = student.netid;
+                                        checkin.fullName = student.fullName;
+                                    } else {
+                                        checkin.netid = '';
+                                        checkin.fullName = '';
+                                    }
+                                    res.send(checkin);
+                                });
                             });
                         });
                     });
@@ -364,24 +364,31 @@ router.post('/api/sections/:id/checkins', function(req, res) {
     });
 });
 
-router.get('/api/courses/:id/checkins/:uin', function(req, res) {
+/**
+ * Get all sections in the course which the user specified by the query
+ * parameter swipeData has checked into.
+ */
+router.get('/api/courses/:id/checkins', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
-    db.Course.find({
-        where: {id: req.params.id}
-    })
-    .success(function(course) {
-        course.hasUser(req.user)
-        .success(function(result) {
-            if (!result) return res.status(403).end();
-            db.Checkin.findAll({
-                where: {
-                    uin: req.params.uin,
-                    'Section.CourseId': req.params.id
-                },
-                include: [db.Section]
-            })
-            .success(function(checkins) {
-                res.send({checkins: checkins});
+    if (!req.query.swipeData) return res.status(400).end();
+    parseSwipe(req.query.swipeData, req.params.id, function(uin) {
+        db.Course.find({
+            where: {id: req.params.id}
+        })
+        .success(function(course) {
+            course.hasUser(req.user)
+            .success(function(result) {
+                if (!result) return res.status(403).end();
+                db.Checkin.findAll({
+                    where: {
+                        uin: uin,
+                        'Section.CourseId': req.params.id
+                    },
+                    include: [db.Section]
+                })
+                .success(function(checkins) {
+                    res.send({checkins: checkins});
+                });
             });
         });
     });

@@ -4,7 +4,6 @@ var React = require('react');
 var $ = require('jquery');
 
 var baseUrl = require('../baseurl');
-var parseSwipe = require('../parse-swipe');
 
 var StudentLookupForm = React.createClass({
     propTypes: {
@@ -33,15 +32,18 @@ var StudentLookupForm = React.createClass({
         }
 
         var id = this.props.courseId;
-        var uin = parseSwipe(this.state.swipeData);
-        var url = baseUrl + '/api/courses/' + id + '/checkins/' + uin;
-        $.get(url, function(result) {
+        var url = baseUrl + '/api/courses/' + id + '/checkins';
+        var data = {swipeData: this.state.swipeData};
+        $.get(url, data, function(result) {
             this.props.onStudentLookup(result);
             this.setState({swipeData: ''});
         }.bind(this));
     },
 
     render: function() {
+        var placeholderText = (
+            'Look up student (Swipe i-card or enter UIN/NetID)'
+        );
         return <div>
             <form onSubmit={this.handleSubmit}>
                 <input
@@ -49,7 +51,7 @@ var StudentLookupForm = React.createClass({
                     className="form-control"
                     id="swipeData"
                     ref="swipeData"
-                    placeholder="Look up student (Swipe i-card or enter UIN)"
+                    placeholder={placeholderText}
                     value={this.state.swipeData}
                     onChange={this.handleSwipeDataChange} />
             </form>
