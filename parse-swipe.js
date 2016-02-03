@@ -9,7 +9,7 @@
  * Returns null if swipe data is invalid.
  */
 var parseSwipe = function(swipeData) {
-    var re = /(?:6397(\d{9})\d{3}|(^\d{9}$))/;
+    var re = /(?:6397(6\d{8})\d{3}|(^6\d{8}$))/;
     var result = re.exec(swipeData);
 
     // result === null: invalid data
