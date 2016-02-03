@@ -9,6 +9,7 @@ var baseUrl = require('../baseurl');
 var NewSectionForm = require('./new-section-form.jsx');
 var StaffList = require('./staff-list.jsx');
 var StudentLookupForm = require('./student-lookup-form.jsx');
+var RosterImportForm = require('./roster-import-form.jsx');
 
 var CourseView = React.createClass({
     propTypes: {
@@ -101,6 +102,8 @@ var CourseView = React.createClass({
                         <StaffList
                             courseId={this.props.id}
                             initialStaff={course.users} />
+                        <h2>Roster</h2>
+                        <RosterImportForm courseId={this.props.id} />
                     </div>
                 </div>
             </div>;

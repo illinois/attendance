@@ -24,12 +24,15 @@ var importRoster = function(roster, courseId, callback) {
 
     // Don't delete existing records if no students were found in case user
     // uploaded the wrong file.
-    if (students.length === 0) return callback(0);
+    if (students.length === 0) return callback(null);
 
     db.Student.destroy({CourseId: courseId})
     .then(function() {
         db.Student.bulkCreate(students).success(function(result) {
-            callback(result.length);
+            callback({
+                count: result.length,
+                lastUpdated: result[0].updatedAt
+            });
         });
     });
 };

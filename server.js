@@ -155,6 +155,32 @@ router.delete('/api/courses/:courseId/staff/:userId', function(req, res) {
     });
 });
 
+router.get('/api/courses/:id/roster', function(req, res) {
+    if (!req.isAuthenticated()) return res.status(401).end();
+    db.Course.find({
+        where: {id: req.params.id}
+    })
+    .success(function(course) {
+        if (!course) return res.status(404).end();
+        course.hasUser(req.user)
+        .success(function(result) {
+            if (!result) return res.status(403).end();
+            db.Student.findAndCountAll({
+                where: {CourseId: req.params.id},
+                limit: 1
+            })
+            .success(function(result) {
+                var count = result.count;
+                var rows = result.rows;
+                res.send({
+                    count: count,
+                    lastUpdated: count > 0 ? rows[0].updatedAt : null
+                });
+            });
+        });
+    });
+});
+
 router.post('/api/courses/:id/roster',
             upload.single('roster'),
             function(req, res) {
@@ -169,11 +195,14 @@ router.post('/api/courses/:id/roster',
             if (!result) return res.status(403).end();
             if (!req.file) return res.status(400).end();
             var roster = req.file.buffer.toString();
-            importRoster(roster, req.params.id, function(numAdded) {
-                if (numAdded === 0) {
+            importRoster(roster, req.params.id, function(result) {
+                if (result === null) {
                     res.status(400).end();
                 } else {
-                    res.send({numAdded: numAdded});
+                    res.send({
+                        count: result.count,
+                        lastUpdated: result.lastUpdated
+                    });
                 }
             });
         });
