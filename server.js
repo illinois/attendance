@@ -356,36 +356,30 @@ router.post('/api/sections/:id/checkins', function(req, res) {
             if (!uin) return res.status(400).end();
             section.hasUser(req.user, function(err, result) {
                 if (!result) return res.status(403).end();
-                db.Checkin.find({
-                    where: {SectionId: req.params.id, uin: uin}
+                db.Checkin.findOrCreate({
+                    SectionId: req.params.id,
+                    uin: uin
+                }, {
+                    UserId: req.user.id
                 })
-                .success(function(checkin) {
-                    if (checkin) return res.status(409).send(checkin);
-                    db.Checkin.create({uin: uin})
-                    .success(function(checkin) {
-                        checkin.setUser(req.user)
-                        .success(function() {
-                            section.addCheckin(checkin)
-                            .success(function() {
-                                checkin = checkin.values;
-                                db.Student.find({
-                                    where: {
-                                        CourseId: section.CourseId,
-                                        uin: checkin.uin
-                                    }
-                                })
-                                .success(function(student) {
-                                    if (student) {
-                                        checkin.netid = student.netid;
-                                        checkin.fullName = student.fullName;
-                                    } else {
-                                        checkin.netid = '';
-                                        checkin.fullName = '';
-                                    }
-                                    res.send(checkin);
-                                });
-                            });
-                        });
+                .success(function(checkin, created) {
+                    if (!created) return res.status(409).send(checkin);
+                    checkin = checkin.values;
+                    db.Student.find({
+                        where: {
+                            CourseId: section.CourseId,
+                            uin: checkin.uin
+                        }
+                    })
+                    .success(function(student) {
+                        if (student) {
+                            checkin.netid = student.netid;
+                            checkin.fullName = student.fullName;
+                        } else {
+                            checkin.netid = '';
+                            checkin.fullName = '';
+                        }
+                        res.send(checkin);
                     });
                 });
             });
