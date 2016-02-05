@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var Sequelize = require('sequelize');
-var _ = require('underscore');
+var _ = require('lodash');
 
 var config = require('../config');
 
