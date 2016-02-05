@@ -27,6 +27,7 @@
         "express-session": "1.7.x",
         "jquery": "2.1.x",
         "ldapjs": "git://github.com/mcavage/node-ldapjs.git#acc1ca8f4314fd9d67561feabc8ce4c235076a5e",
+        "lodash": "4.2.x",
         "marked": "0.3.x",
         "moment": "2.8.x",
         "multer": "1.0.x",
@@ -41,7 +42,6 @@
         "reactify": "1.1.x",
         "sequelize": "1.7.x",
         "uglify-js": "2.4.x",
-        "underscore": "1.6.x",
         "watchify": "1.0.x"
     },
     "devDependencies": {

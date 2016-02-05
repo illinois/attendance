@@ -1,6 +1,7 @@
 var fs = require('fs');
 var cheerio = require('cheerio');
 var db = require('./models');
+var _ = require('lodash');
 
 /**
  * Import roster in the format of My.CS Portal's "Export to Excel".
@@ -21,6 +22,8 @@ var importRoster = function(roster, courseId, callback) {
             lastName: row.eq(3).text()
         });
     });
+
+    students = _.uniqBy(students, 'uin');
 
     // Don't delete existing records if no students were found in case user
     // uploaded the wrong file.
