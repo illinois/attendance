@@ -3,9 +3,9 @@
 var React = require('react');
 var update = require('react-addons-update');
 var $ = require('jquery');
-var classNames = require('classnames');
 
 var baseUrl = require('../baseurl');
+var SectionList = require('./section-list.jsx');
 var NewSectionForm = require('./new-section-form.jsx');
 var StaffList = require('./staff-list.jsx');
 var StudentLookupForm = require('./student-lookup-form.jsx');
@@ -61,34 +61,19 @@ var CourseView = React.createClass({
         if (!course) {
             body = <div>Loading...</div>;
         } else {
-            var sections = course.sections.map(function(section) {
-                var highlight = this.state.checkins.some(function(checkin) {
-                    return checkin.SectionId == section.id;
-                });
-                var classes = classNames('list-group-item', {
-                    'list-group-item-success': highlight
-                });
-                return <a
-                    href={baseUrl + '/sections/' + section.id}
-                    className={classes}
-                    onClick={this.props.handleNav}
-                    key={section.id}>
-                    {section.name}
-                </a>;
-            }.bind(this));
-
             body = <div>
                 <div className="row">
                     <div className="col-md-12">
-                        <h1>{this.state.course.name}</h1>
+                        <h1>{course.name}</h1>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-8">
                         <h2>Sections</h2>
-                        <ul className="list-group section-list">
-                            {sections}
-                        </ul>
+                        <SectionList
+                            handleNav={this.props.handleNav}
+                            sections={course.sections}
+                            checkins={this.state.checkins} />
                         <NewSectionForm
                             courseId={this.props.id}
                             onCreateSection={this.handleNewSection} />

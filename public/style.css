@@ -39,6 +39,10 @@
 }
 
 /* Section list */
+.section-search-bar {
+    margin-bottom: 10px;
+}
+
 .section-list.list-group {
     margin-bottom: 10px;
 }

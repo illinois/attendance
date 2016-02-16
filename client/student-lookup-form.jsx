@@ -17,10 +17,6 @@ var StudentLookupForm = React.createClass({
         };
     },
 
-    componentDidMount: function() {
-        this.refs.swipeData.focus();
-    },
-
     handleSwipeDataChange: function(e) {
         this.setState({swipeData: e.target.value});
     },
@@ -49,8 +45,6 @@ var StudentLookupForm = React.createClass({
                 <input
                     type="text"
                     className="form-control"
-                    id="swipeData"
-                    ref="swipeData"
                     placeholder={placeholderText}
                     value={this.state.swipeData}
                     onChange={this.handleSwipeDataChange} />
