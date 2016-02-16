@@ -84,9 +84,7 @@ var CourseView = React.createClass({
                             courseId={this.props.id}
                             onStudentLookup={this.handleStudentLookup} />
                         <h2>Staff</h2>
-                        <StaffList
-                            courseId={this.props.id}
-                            initialStaff={course.users} />
+                        <StaffList courseId={this.props.id} />
                         <h2>Roster</h2>
                         <RosterImportForm courseId={this.props.id} />
                     </div>

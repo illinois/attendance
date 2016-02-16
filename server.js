@@ -86,7 +86,7 @@ router.get('/api/courses/:id', function(req, res) {
     if (!req.isAuthenticated()) return res.status(401).end();
     db.Course.find({
         where: {id: req.params.id},
-        include: [db.User, db.Section]
+        include: [db.Section]
     })
     .success(function(course) {
         if (!course) return res.status(404).end();

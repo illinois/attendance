@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var $ = require('jquery');
 var update = require('react-addons-update');
 var Modal = require('react-bootstrap/lib/Modal');
 var Button = require('react-bootstrap/lib/Button');
@@ -10,15 +11,21 @@ var AddStaffForm = require('./add-staff-form.jsx');
 
 var StaffList = React.createClass({
     propTypes: {
-        courseId: React.PropTypes.number.isRequired,
-        initialStaff: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
+        courseId: React.PropTypes.number.isRequired
     },
 
     getInitialState: function() {
         return {
-            staff: this.props.initialStaff,
+            staff: null,
             removeTarget: null
         };
+    },
+
+    componentDidMount: function() {
+        var url = baseUrl + '/api/courses/' + this.props.courseId + '/staff';
+        $.get(url, function(data) {
+            this.setState({staff: data.staff});
+        }.bind(this));
     },
 
     handleAddStaff: function(user) {
@@ -58,17 +65,24 @@ var StaffList = React.createClass({
     },
 
     render: function() {
-        var staff = this.state.staff.map(function(user) {
-            return <div key={user.id}>
-                {user.name} ({user.netid})
-                {' '}
-                <a
-                    href="#"
-                    onClick={this.handleRemoveStaff.bind(this, user)}>
-                    &#x2715;
-                </a>
+        var staff;
+        if (!this.state.staff) {
+            staff = <div>
+                Loading...
             </div>;
-        }.bind(this));
+        } else {
+            staff = this.state.staff.map(function(user) {
+                return <div key={user.id}>
+                    {user.name} ({user.netid})
+                    {' '}
+                    <a
+                        href="#"
+                        onClick={this.handleRemoveStaff.bind(this, user)}>
+                        &#x2715;
+                    </a>
+                </div>;
+            }.bind(this));
+        }
 
         return <div>
             <Modal
