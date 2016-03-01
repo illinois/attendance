@@ -54,7 +54,7 @@ router.get('/api/*', function(req, res) {
  */
 router.get('/logout', function(req, res) {
     req.logout();
-    res.redirect('/login');
+    res.redirect(path.join(baseUrl, '/login'));
 });
 
 /**
