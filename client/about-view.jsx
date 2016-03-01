@@ -23,7 +23,6 @@ var AboutView = React.createClass({
             </p>
             <ul>
                 <li>Create a new course</li>
-                <li>Rename a section</li>
             </ul>
             <h2>Source</h2>
             <p>

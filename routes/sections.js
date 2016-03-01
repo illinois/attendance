@@ -20,6 +20,25 @@ router.get('/:id', function(req, res) {
     });
 });
 
+router.put('/:id', function(req, res) {
+    if (!req.body.name) return res.status(400).end();
+    db.Section.find({
+        where: {id: req.params.id}
+    })
+    .success(function(section) {
+        if (!section) return res.status(404).end();
+        section.hasUser(req.user, function(err, result) {
+            if (!result) return res.status(403).end();
+            section.updateAttributes({
+                name: req.body.name
+            })
+            .success(function(section) {
+                res.send(section);
+            });
+        });
+    });
+});
+
 router.get('/:id/checkins', function(req, res) {
     db.Section.find({
         where: {id: req.params.id}
