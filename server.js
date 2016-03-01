@@ -2,7 +2,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var MySQLStore = require('connect-mysql')(session);
-var async = require('async');
 var path = require('path');
 
 var baseUrl = require('./baseurl');
