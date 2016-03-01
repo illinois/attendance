@@ -19,7 +19,8 @@ var SectionView = React.createClass({
         return {
             section: null,
             renameName: '',
-            renameModalExpanded: false
+            renameModalExpanded: false,
+            isRenaming: false
         };
     },
 
@@ -58,13 +59,17 @@ var SectionView = React.createClass({
 
     handleRenameSubmit: function(e) {
         e.preventDefault();
+        this.setState({isRenaming: true});
         $.ajax({
             type: 'PUT',
             url: baseUrl + '/api/sections/' + this.props.id,
             data: {name: this.state.renameName}
         })
         .done(function(result) {
-            this.setState({section: result});
+            this.setState({
+                section: result,
+                isRenaming: false
+            });
             this.closeModal();
         }.bind(this));
     },
@@ -106,8 +111,9 @@ var SectionView = React.createClass({
                     <Button onClick={this.closeModal}>Cancel</Button>
                     <Button
                         bsStyle="primary"
+                        disabled={this.state.isRenaming}
                         onClick={this.handleRenameSubmit}>
-                        Rename
+                        {this.state.isRenaming ? 'Renaming...' : 'Rename'}
                     </Button>
                 </Modal.Footer>
             </Modal>
