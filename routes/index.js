@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 
-var baseUrl = require('../baseUrl');
+var baseUrl = require('../baseurl');
 
 module.exports = function(app) {
     fs
