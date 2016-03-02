@@ -232,7 +232,13 @@ router.get('/:id/students/:uin/photo.jpg', function(req, res) {
                 }
 
                 fetchIDPhoto(uin, function(error, response, body) {
-                    res.type(response.headers['content-type']);
+                    if (response.headers['content-type'] !== 'image/jpeg') {
+                        // Session cookie is not valid
+                        return res.sendFile('no_photo.jpg', {
+                            root: path.join(__dirname, '../public/')
+                        });
+                    }
+                    res.type('image/jpeg');
                     res.send(body);
                 });
             });
