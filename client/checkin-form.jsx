@@ -111,7 +111,7 @@ var CheckinForm = React.createClass({
         if (this.state.lastSwipes.length > 0) {
             var id = this.props.sectionId;
             var lastUIN = this.state.lastSwipes[0].uin;
-            var photoUrl = baseUrl + '/api/sections/' + id + '/students/' + lastUIN + '/photo.jpg';
+            photoUrl = baseUrl + '/api/sections/' + id + '/students/' + lastUIN + '/photo.jpg';
         }
 
         return <div>
