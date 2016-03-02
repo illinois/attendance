@@ -240,7 +240,10 @@ router.get('/:id/students/:uin/photo.jpg', function(req, res) {
                 where: {CourseId: section.CourseId, uin: uin}
             })
             .success(function(student) {
+                // Hack to get the "Photo Not Available" image from My.CS if
+                // the student is not in the roster
                 if (!student) uin = 0;
+
                 fetchIDPhoto(uin, function(error, response, body) {
                     res.type(response.headers['content-type']);
                     res.send(body);
