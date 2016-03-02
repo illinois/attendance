@@ -3,7 +3,6 @@ var request = require('request');
 var config = require('./config');
 
 var fetchIDPhoto = function(uin, callback) {
-    console.log("Fetching ID photo for " + uin);
     var url = 'https://my.cs.illinois.edu/classtools/viewphoto.asp?uin=' + uin;
 
     var jar = request.jar();
