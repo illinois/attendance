@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var async = require('async');
+var path = require('path');
 
 var db = require('../models');
 var parseSwipe = require('../parse-swipe');
@@ -223,9 +224,12 @@ router.get('/:id/students/:uin/photo.jpg', function(req, res) {
                 where: {CourseId: section.CourseId, uin: uin}
             })
             .success(function(student) {
-                // Hack to get the "Photo Not Available" image from My.CS if
-                // the student is not in the roster
-                if (!student) uin = 0;
+                // Do not return ID photo if student is not in the roster
+                if (!student) {
+                    return res.sendFile('no_photo.jpg', {
+                        root: path.join(__dirname, '../public/')
+                    });
+                }
 
                 fetchIDPhoto(uin, function(error, response, body) {
                     res.type(response.headers['content-type']);

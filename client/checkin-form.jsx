@@ -107,12 +107,11 @@ var CheckinForm = React.createClass({
             </li>;
         });
 
-        var idPhoto = null;
-        if (this.state.lastSwipes[0] !== undefined) {
+        var photoUrl = baseUrl + '/no_photo.jpg';
+        if (this.state.lastSwipes.length > 0) {
             var id = this.props.sectionId;
             var lastUIN = this.state.lastSwipes[0].uin;
             var photoUrl = baseUrl + '/api/sections/' + id + '/students/' + lastUIN + '/photo.jpg';
-            idPhoto = <img className="checkin-id-photo" src={photoUrl} />;
         }
 
         return <div>
@@ -136,7 +135,7 @@ var CheckinForm = React.createClass({
                         </form>
                     </div>
                     <div className="col-md-4 checkin-id-photo-container">
-                        {idPhoto}
+                        <img className="checkin-id-photo" src={photoUrl} />
                     </div>
                 </div>
             </div>
