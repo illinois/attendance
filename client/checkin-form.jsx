@@ -107,23 +107,38 @@ var CheckinForm = React.createClass({
             </li>;
         });
 
+        var idPhoto = null;
+        if (this.state.lastSwipes[0] !== undefined) {
+            var id = this.props.sectionId;
+            var lastUIN = this.state.lastSwipes[0].uin;
+            var photoUrl = baseUrl + '/api/sections/' + id + '/students/' + lastUIN + '/photo.jpg';
+            idPhoto = <img className="checkin-id-photo" src={photoUrl} />;
+        }
+
         return <div>
             <div className="well">
-                <legend className="checkin-form-label">
-                    Swipe i-card or enter UIN/NetID
-                </legend>
-                {alert}
-                <form
-                    onSubmit={this.handleSubmit}
-                    autoComplete="off">
-                    <input
-                        type="text"
-                        className="form-control input-lg"
-                        id="swipeData"
-                        ref="swipeData"
-                        value={this.state.swipeData}
-                        onChange={this.handleSwipeDataChange} />
-                </form>
+                <div className="row">
+                    <div className="col-md-8">
+                        <legend className="checkin-form-label">
+                            Swipe i-card or enter UIN/NetID
+                        </legend>
+                        {alert}
+                        <form
+                            onSubmit={this.handleSubmit}
+                            autoComplete="off">
+                            <input
+                                type="text"
+                                className="form-control input-lg"
+                                id="swipeData"
+                                ref="swipeData"
+                                value={this.state.swipeData}
+                                onChange={this.handleSwipeDataChange} />
+                        </form>
+                    </div>
+                    <div className="col-md-4 checkin-id-photo-container">
+                        {idPhoto}
+                    </div>
+                </div>
             </div>
             <h2>Last swipes</h2>
             <ul className="list-group">

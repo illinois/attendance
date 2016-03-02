@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var async = require('async');
+var request = require('request');
 
+var config = require('../config');
 var db = require('../models');
 var parseSwipe = require('../parse-swipe');
 
@@ -202,6 +204,46 @@ router.post('/:id/comments', function(req, res) {
                             res.send(commentWithUser);
                         });
                     });
+                });
+            });
+        });
+    });
+});
+
+var fetchIDPhoto = function(uin, callback) {
+    var url = 'https://my.cs.illinois.edu/classtools/viewphoto.asp?uin=' + uin;
+
+    var jar = request.jar();
+    jar.setCookie(request.cookie(config.myCSSessionCookie), url);
+
+    request({
+        url: url,
+        jar: jar,
+        headers: {
+            'Referer': 'https://my.cs.illinois.edu/classtools/viewroster.asp'
+        },
+        encoding: null
+    }, callback);
+};
+
+router.get('/:id/students/:uin/photo.jpg', function(req, res) {
+    var id = req.params.id;
+    db.Section.find({
+        where: {id: req.params.id}
+    })
+    .success(function(section) {
+        if (!section) return res.status(404).end();
+        section.hasUser(req.user, function(err, result) {
+            if (!result) return res.status(403).end();
+            var uin = req.params.uin;
+            db.Student.find({
+                where: {CourseId: id, uin: uin}
+            })
+            .success(function(student) {
+                if (!student) uin = 0;
+                fetchIDPhoto(uin, function(error, response, body) {
+                    res.type(response.headers['content-type']);
+                    res.send(body);
                 });
             });
         });

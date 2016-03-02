@@ -27,4 +27,8 @@ config.db = {
     },
 };
 
+// Session cookie generated when logging into my.cs.illinois.edu
+// Used to fetch i-card photos
+config.myCSSessionCookie = 'key=value';
+
 module.exports = config;
