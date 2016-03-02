@@ -237,7 +237,7 @@ router.get('/:id/students/:uin/photo.jpg', function(req, res) {
             if (!result) return res.status(403).end();
             var uin = req.params.uin;
             db.Student.find({
-                where: {CourseId: id, uin: uin}
+                where: {CourseId: section.CourseId, uin: uin}
             })
             .success(function(student) {
                 if (!student) uin = 0;
