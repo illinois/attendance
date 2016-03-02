@@ -1,11 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var async = require('async');
-var request = require('request');
 
-var config = require('../config');
 var db = require('../models');
 var parseSwipe = require('../parse-swipe');
+var fetchIDPhoto = require('../fetch-id-photo');
 
 router.use(require('../middleware/require-auth'));
 
@@ -209,22 +208,6 @@ router.post('/:id/comments', function(req, res) {
         });
     });
 });
-
-var fetchIDPhoto = function(uin, callback) {
-    var url = 'https://my.cs.illinois.edu/classtools/viewphoto.asp?uin=' + uin;
-
-    var jar = request.jar();
-    jar.setCookie(request.cookie(config.myCSSessionCookie), url);
-
-    request({
-        url: url,
-        jar: jar,
-        headers: {
-            'Referer': 'https://my.cs.illinois.edu/classtools/viewroster.asp'
-        },
-        encoding: null
-    }, callback);
-};
 
 router.get('/:id/students/:uin/photo.jpg', function(req, res) {
     var id = req.params.id;

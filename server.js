@@ -8,6 +8,7 @@ var baseUrl = require('./baseurl');
 var config = require('./config');
 var passport = require('./authentication');
 var db = require('./models');
+var fetchIDPhoto = require('./fetch-id-photo');
 
 var NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -76,6 +77,10 @@ if (baseUrl) {
         res.redirect(baseUrl);
     });
 }
+
+// Keep My.CS Portal session alive by sending a request every 10 minutes
+fetchIDPhoto(0);
+setInterval(fetchIDPhoto.bind(null, 0), 60000);
 
 db.sequelize.sync()
 .complete(function(err) {
