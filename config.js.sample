@@ -32,6 +32,6 @@ config.db = {
 config.myCSCookie = {
     aspSessionId: 'ASPSESSIONID*=value',
     portalSession: 'PORTAL%5FSESSION=value'
-}
+};
 
 module.exports = config;
