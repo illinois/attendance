@@ -27,8 +27,11 @@ config.db = {
     },
 };
 
-// Session cookie generated when logging into my.cs.illinois.edu
+// Session cookies generated when logging into my.cs.illinois.edu
 // Used to fetch i-card photos
-config.myCSSessionCookie = 'key=value';
+config.myCSCookie = {
+    aspSessionId: 'ASPSESSIONID*=value',
+    portalSession: 'PORTAL%5FSESSION=value'
+}
 
 module.exports = config;
