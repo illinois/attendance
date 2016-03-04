@@ -80,7 +80,7 @@ if (baseUrl) {
 
 // Keep My.CS Portal session alive by sending a request every 10 minutes
 fetchIDPhoto(0);
-setInterval(fetchIDPhoto.bind(null, 0), 60000);
+setInterval(fetchIDPhoto, 600000, 0);
 
 db.sequelize.sync()
 .complete(function(err) {
