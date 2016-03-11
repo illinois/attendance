@@ -185,7 +185,7 @@ router.post('/:id/comments', function(req, res) {
             if (!result) return res.status(403).end();
             db.Comment.create({
                 UserId: req.user.id,
-                SectionId: parseInt(req.params.id),
+                SectionId: section.id,
                 text: req.body.text
             })
             .success(function(comment) {
