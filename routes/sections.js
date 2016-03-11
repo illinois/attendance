@@ -223,16 +223,27 @@ router.get('/:id/students/:uin/photo.jpg', function(req, res) {
                     });
                 }
 
-                fetchIDPhoto(uin, function(error, response, body) {
-                    if (response.headers['content-type'] !== 'image/jpeg') {
-                        // Session cookie is not valid
+                // Use locally stored photos
+                return res.sendFile(uin + '.jpg', {
+                    root: path.join(__dirname, '../photos')
+                }, function(err) {
+                    if (err) {
                         return res.sendFile('no_photo.jpg', {
                             root: path.join(__dirname, '../public/')
                         });
                     }
-                    res.type('image/jpeg');
-                    res.send(body);
                 });
+
+                //fetchIDPhoto(uin, function(error, response, body) {
+                    //if (response.headers['content-type'] !== 'image/jpeg') {
+                        //// Session cookie is not valid
+                        //return res.sendFile('no_photo.jpg', {
+                            //root: path.join(__dirname, '../public/')
+                        //});
+                    //}
+                    //res.type('image/jpeg');
+                    //res.send(body);
+                //});
             });
         });
     });
