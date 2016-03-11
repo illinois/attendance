@@ -11,7 +11,7 @@ var writeCSV = function(checkins, res) {
     // Set up CSV stringifier
     var stringifier = stringify();
     stringifier.on('readable', function() {
-        while (row = stringifier.read()) {
+        while ((row = stringifier.read()) !== null) {
             res.write(row);
         }
     });
@@ -35,6 +35,6 @@ var writeCSV = function(checkins, res) {
     }, function() {
         stringifier.end();
     });
-}
+};
 
 module.exports = writeCSV;
