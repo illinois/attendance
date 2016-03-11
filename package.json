@@ -22,6 +22,7 @@
         "cheerio": "0.19.x",
         "classnames": "2.1.x",
         "connect-mysql": "2.1.x",
+        "csv-stringify": "1.0.x",
         "ejs": "1.0.x",
         "express": "4.8.x",
         "express-session": "1.7.x",

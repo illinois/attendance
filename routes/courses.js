@@ -7,6 +7,7 @@ var upload = multer({storage: storage});
 var db = require('../models');
 var importRoster = require('../import-roster');
 var parseSwipe = require('../parse-swipe');
+var writeCSV = require('../write-csv');
 
 router.use(require('../middleware/require-auth'));
 
@@ -216,6 +217,30 @@ router.get('/:id/checkins', function(req, res) {
                     res.send({checkins: checkins});
                 });
             });
+        });
+    });
+});
+
+router.get('/:id/checkins.csv', function(req, res) {
+    db.Course.find({
+        where: {id: req.params.id}
+    })
+    .success(function(course) {
+        var query = (
+            'SELECT Sections.name AS sectionName, Checkins.uin, ' +
+            'Students.netid, Checkins.createdAt AS timestamp ' +
+            'FROM Checkins ' +
+            'JOIN Sections ON Checkins.SectionId = Sections.id ' +
+            'JOIN Courses ON Sections.CourseId = Courses.id ' +
+            'LEFT JOIN Students ON ' +
+            'Students.CourseId = Sections.CourseId ' +
+            'AND Students.uin = Checkins.uin ' +
+            'WHERE Courses.id = ? ORDER BY Sections.id, timestamp'
+        );
+        db.sequelize.query(query, null, {raw: true}, [req.params.id])
+        .success(function(checkins) {
+            res.attachment(course.name.replace(/\//g, '-') + '.csv');
+            writeCSV(checkins, res);
         });
     });
 });

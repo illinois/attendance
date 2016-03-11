@@ -61,6 +61,7 @@ var CourseView = React.createClass({
         if (!course) {
             body = <div>Loading...</div>;
         } else {
+            var id = this.props.id;
             body = <div>
                 <div className="row">
                     <div className="col-md-12">
@@ -75,18 +76,25 @@ var CourseView = React.createClass({
                             sections={course.sections}
                             checkins={this.state.checkins} />
                         <NewSectionForm
-                            courseId={this.props.id}
+                            courseId={id}
                             onCreateSection={this.handleNewSection} />
                     </div>
                     <div className="col-md-4">
                         <h2>Check attendance</h2>
                         <StudentLookupForm
-                            courseId={this.props.id}
+                            courseId={id}
                             onStudentLookup={this.handleStudentLookup} />
                         <h2>Staff</h2>
-                        <StaffList courseId={this.props.id} />
+                        <StaffList courseId={id} />
                         <h2>Roster</h2>
-                        <RosterImportForm courseId={this.props.id} />
+                        <RosterImportForm courseId={id} />
+                        <h2>Export</h2>
+                        <a
+                            href={baseUrl + '/api/courses/' + id + '/checkins.csv'}
+                            className="btn btn-default"
+                            download>
+                            Export all sections to CSV
+                        </a>
                     </div>
                 </div>
             </div>;

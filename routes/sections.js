@@ -6,6 +6,7 @@ var path = require('path');
 var db = require('../models');
 var parseSwipe = require('../parse-swipe');
 var fetchIDPhoto = require('../fetch-id-photo');
+var writeCSV = require('../write-csv');
 
 router.use(require('../middleware/require-auth'));
 
@@ -93,28 +94,19 @@ router.get('/:id/checkins.csv', function(req, res) {
         section.hasUser(req.user, function(err, result) {
             if (!result) return res.status(403).end();
             var query = (
-                'SELECT Checkins.uin, Students.netid, ' +
-                'Checkins.createdAt AS timestamp ' +
+                'SELECT Sections.name AS sectionName, Checkins.uin, ' +
+                'Students.netid, Checkins.createdAt AS timestamp ' +
                 'FROM Checkins ' +
                 'JOIN Sections ON Checkins.SectionId = Sections.id ' +
                 'LEFT JOIN Students ON ' +
                 'Students.CourseId = Sections.CourseId ' +
                 'AND Students.uin = Checkins.uin ' +
-                'WHERE SectionId = ? ORDER BY timestamp'
+                'WHERE Sections.id = ? ORDER BY timestamp'
             );
             db.sequelize.query(query, null, {raw: true}, [req.params.id])
             .success(function(checkins) {
                 res.attachment(section.name.replace(/\//g, '-') + '.csv');
-                res.write('uin,netid,timestamp\n');
-                async.eachSeries(checkins, function(checkin, callback) {
-                    var uin = checkin.uin;
-                    var netid = checkin.netid || '';
-                    var timestamp = checkin.timestamp.toISOString();
-                    res.write(uin + ',' + netid + ',' + timestamp + '\n');
-                    callback();
-                }, function() {
-                    res.end();
-                });
+                writeCSV(checkins, res);
             });
         });
     });
