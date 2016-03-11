@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var async = require('async');
 var path = require('path');
+var _ = require('lodash');
 
 var db = require('../models');
 var parseSwipe = require('../parse-swipe');
@@ -182,21 +183,15 @@ router.post('/:id/comments', function(req, res) {
         if (!section) return res.status(404).end();
         section.hasUser(req.user, function(err, result) {
             if (!result) return res.status(403).end();
-            db.Comment.create({text: req.body.text})
+            db.Comment.create({
+                UserId: req.user.id,
+                SectionId: parseInt(req.params.id),
+                text: req.body.text
+            })
             .success(function(comment) {
-                comment.setUser(req.user)
-                .success(function() {
-                    section.addComment(comment)
-                    .success(function() {
-                        db.Comment.find({
-                            where: {id: comment.id},
-                            include: [db.User]
-                        })
-                        .success(function(commentWithUser) {
-                            res.send(commentWithUser);
-                        });
-                    });
-                });
+                res.send(_.assign({
+                    user: req.user
+                }, comment.dataValues));
             });
         });
     });
