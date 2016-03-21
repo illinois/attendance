@@ -2,6 +2,7 @@ var config = {};
 
 config.port = 4000;
 config.sessionSecret = 'not secret';
+config.authenticationEnabled = true;
 
 config.db = {
     development: {

@@ -2,12 +2,33 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var ldap = require('ldapjs');
 
+var config = require('./config');
 var db = require('./models');
+
+/**
+ * Retrieve user from the database or create it if it doesn't exist.
+ */
+var getAuthenticatedUser = function(netid, callback) {
+    db.User.findOrCreate({netid: netid})
+    .spread(function(user, created) {
+        // If the user was just created, don't call getNameFromLDAP()
+        // because it has already been called by User's afterCreate
+        // hook.
+        if (!created && !user.name) {
+            user.getNameFromLDAP();
+        }
+        callback(null, user);
+    });
+};
 
 /**
  * Authenticate with UIUC Active Directory using an LDAP simple bind.
  */
 passport.use(new LocalStrategy(function(username, password, done) {
+    if (!config.authenticationEnabled) {
+        return getAuthenticatedUser(username, done);
+    }
+
     var client = ldap.createClient({
         url: 'ldap://ad.uillinois.edu:389'
     });
@@ -25,16 +46,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
                 return done(err);
             }
 
-            db.User.findOrCreate({netid: username})
-            .spread(function(user, created) {
-                // If the user was just created, don't call getNameFromLDAP()
-                // because it has already been called by User's afterCreate
-                // hook.
-                if (!created && !user.name) {
-                    user.getNameFromLDAP();
-                }
-                done(null, user);
-            });
+            getAuthenticatedUser(username, done);
         });
     });
 }));
