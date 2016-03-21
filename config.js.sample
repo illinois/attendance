@@ -9,6 +9,7 @@ config.db = {
         database: 'attendance',
         username: 'root',
         password: null,
+        socketPath: null,
         logging: console.log
     },
     production: {
@@ -16,6 +17,7 @@ config.db = {
         database: 'attendance',
         username: 'root',
         password: null,
+        socketPath: null,
         logging: false
     },
     test: {
@@ -23,6 +25,7 @@ config.db = {
         database: 'attendance_test',
         username: 'root',
         password: null,
+        socketPath: null,
         logging: false
     },
 };

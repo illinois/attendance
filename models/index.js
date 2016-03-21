@@ -14,7 +14,10 @@ var sequelize = new Sequelize(
     dbConfig.password,
     {
         host: dbConfig.host,
-        logging: dbConfig.logging
+        logging: dbConfig.logging,
+        dialectOptions: {
+            socketPath: dbConfig.socketPath
+        }
     }
 );
 var db = {};

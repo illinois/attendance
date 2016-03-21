@@ -25,7 +25,8 @@ app.use(session({
             host: dbConfig.host,
             database: dbConfig.database,
             user: dbConfig.username,
-            password: dbConfig.password
+            password: dbConfig.password,
+            socketPath: dbConfig.socketPath
         }
     }),
     secret: config.sessionSecret,
