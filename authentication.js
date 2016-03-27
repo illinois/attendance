@@ -9,8 +9,9 @@ var db = require('./models');
  * Retrieve user from the database or create it if it doesn't exist.
  */
 var getAuthenticatedUser = function(netid, callback) {
-    db.User.findOrCreate({netid: netid})
-    .spread(function(user, created) {
+    db.User.findOrCreate({
+        where: {netid: netid}
+    }).spread(function(user, created) {
         // If the user was just created, don't call getNameFromLDAP()
         // because it has already been called by User's afterCreate
         // hook.
@@ -58,8 +59,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(netid, done) {
     db.User.find({
         where: {netid: netid}
-    })
-    .success(function(user) {
+    }).then(function(user) {
         done(null, user);
     });
 });

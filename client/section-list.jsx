@@ -33,7 +33,7 @@ var SectionList = React.createClass({
             return sectionName.indexOf(query) > -1;
         }.bind(this)).map(function(section) {
             var highlight = this.props.checkins.some(function(checkin) {
-                return checkin.SectionId == section.id;
+                return checkin.sectionId == section.id;
             });
             var classes = classNames('list-group-item', {
                 'list-group-item-success': highlight

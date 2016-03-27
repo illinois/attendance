@@ -83,11 +83,6 @@ if (baseUrl) {
 fetchIDPhoto(0);
 setInterval(fetchIDPhoto, 600000, 0);
 
-db.sequelize.sync()
-.complete(function(err) {
-    if (err) {
-        throw err[0];
-    } else {
-        app.listen(config.port);
-    }
+db.sequelize.sync().then(function() {
+    app.listen(config.port);
 });

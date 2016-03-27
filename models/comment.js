@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-    var Comment = sequelize.define('Comment', {
+    var Comment = sequelize.define('comment', {
         text: DataTypes.TEXT
     }, {
         classMethods: {

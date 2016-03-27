@@ -22,6 +22,10 @@ var sequelize = new Sequelize(
 );
 var db = {};
 
+var capitalize = function(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
 fs
 .readdirSync(__dirname)
 .filter(function(file) {
@@ -29,10 +33,11 @@ fs
 })
 .forEach(function(file) {
     var model = sequelize.import(path.join(__dirname, file));
-    db[model.name] = model;
+    db[capitalize(model.name)] = model;
 });
 
 Object.keys(db).forEach(function(modelName) {
+    modelName = capitalize(modelName);
     if ('associate' in db[modelName]) {
         db[modelName].associate(db);
     }

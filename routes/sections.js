@@ -12,144 +12,124 @@ var writeCSV = require('../write-csv');
 router.use(require('../middleware/require-auth'));
 
 router.get('/:id', function(req, res) {
-    db.Section.find({
+    db.Section.findForUser({
         where: {id: req.params.id}
-    })
-    .success(function(section) {
+    }, req.user).spread(function(section, allowed) {
         if (!section) return res.status(404).end();
-        section.hasUser(req.user, function(err, result) {
-            if (!result) return res.status(403).end();
-            res.send(section);
-        });
+        if (!allowed) return res.status(403).end();
+        res.send(section);
     });
 });
 
 router.put('/:id', function(req, res) {
     if (!req.body.name) return res.status(400).end();
-    db.Section.find({
+    db.Section.findForUser({
         where: {id: req.params.id}
-    })
-    .success(function(section) {
+    }, req.user).spread(function(section, allowed) {
         if (!section) return res.status(404).end();
-        section.hasUser(req.user, function(err, result) {
-            if (!result) return res.status(403).end();
-            section.updateAttributes({
-                name: req.body.name
-            })
-            .success(function(section) {
-                res.send(section);
-            });
+        if (!allowed) return res.status(403).end();
+        section.updateAttributes({
+            name: req.body.name
+        }).then(function(section) {
+            res.send(section);
         });
     });
 });
 
 router.get('/:id/checkins', function(req, res) {
-    db.Section.find({
+    db.Section.findForUser({
         where: {id: req.params.id}
-    })
-    .success(function(section) {
+    }, req.user).spread(function(section, allowed) {
         if (!section) return res.status(404).end();
-        section.hasUser(req.user, function(err, result) {
-            if (!result) return res.status(403).end();
-            var last = req.query.last;
-            db.Checkin.findAll({
-                where: {SectionId: req.params.id},
-                order: last ? [['createdAt', 'DESC']] : null,
-                limit: last ? 5 : null
-            })
-            .success(function(checkins) {
-                checkins = checkins.map(function(checkin) {
-                    return checkin.values;
+        if (!allowed) return res.status(403).end();
+        var last = req.query.last;
+        db.Checkin.findAll({
+            where: {sectionId: req.params.id},
+            order: last ? [['createdAt', 'DESC']] : null,
+            limit: last ? 5 : null,
+            raw: true
+        }).then(function(checkins) {
+            async.each(checkins, function(checkin, callback) {
+                db.Student.find({
+                    where: {
+                        courseId: section.courseId,
+                        uin: checkin.uin
+                    }
+                }).then(function(student) {
+                    if (student) {
+                        checkin.netid = student.netid;
+                        checkin.fullName = student.fullName;
+                    } else {
+                        checkin.netid = '';
+                        checkin.fullName = '';
+                    }
+                    callback();
                 });
-                async.each(checkins, function(checkin, callback) {
-                    db.Student.find({
-                        where: {
-                            CourseId: section.CourseId,
-                            uin: checkin.uin
-                        }
-                    })
-                    .success(function(student) {
-                        if (student) {
-                            checkin.netid = student.netid;
-                            checkin.fullName = student.fullName;
-                        } else {
-                            checkin.netid = '';
-                            checkin.fullName = '';
-                        }
-                        callback();
-                    });
-                }, function() {
-                    res.send({checkins: checkins});
-                });
+            }, function() {
+                res.send({checkins: checkins});
             });
         });
     });
 });
 
 router.get('/:id/checkins.csv', function(req, res) {
-    db.Section.find({
+    db.Section.findForUser({
         where: {id: req.params.id}
-    })
-    .success(function(section) {
+    }, req.user).spread(function(section, allowed) {
         if (!section) return res.status(404).end();
-        section.hasUser(req.user, function(err, result) {
-            if (!result) return res.status(403).end();
-            var query = (
-                'SELECT Sections.name AS sectionName, Checkins.uin, ' +
-                'Students.netid, Checkins.createdAt AS timestamp ' +
-                'FROM Checkins ' +
-                'JOIN Sections ON Checkins.SectionId = Sections.id ' +
-                'LEFT JOIN Students ON ' +
-                'Students.CourseId = Sections.CourseId ' +
-                'AND Students.uin = Checkins.uin ' +
-                'WHERE Sections.id = ? ORDER BY timestamp'
-            );
-            db.sequelize.query(query, null, {raw: true}, [req.params.id])
-            .success(function(checkins) {
-                res.attachment(section.name.replace(/\//g, '-') + '.csv');
-                writeCSV(checkins, res);
-            });
+        if (!allowed) return res.status(403).end();
+        var query = (
+            'SELECT sections.name AS sectionName, checkins.uin, ' +
+            'students.netid, checkins.createdAt AS timestamp ' +
+            'FROM checkins ' +
+            'JOIN sections ON checkins.sectionId = sections.id ' +
+            'LEFT JOIN students ON ' +
+            'students.courseId = sections.courseId ' +
+            'AND students.uin = checkins.uin ' +
+            'WHERE sections.id = ? ORDER BY timestamp'
+        );
+        db.sequelize.query(query, {
+            replacements: [req.params.id],
+            type: db.sequelize.QueryTypes.SELECT
+        }).then(function(checkins) {
+            res.attachment(section.name.replace(/\//g, '-') + '.csv');
+            writeCSV(checkins, res);
         });
     });
 });
 
 router.post('/:id/checkins', function(req, res) {
     if (!req.body.swipeData) return res.status(400).end();
-
-    db.Section.find({
+    db.Section.findForUser({
         where: {id: req.params.id}
-    })
-    .success(function(section) {
+    }, req.user).spread(function(section, allowed) {
         if (!section) return res.status(404).end();
-        parseSwipe(req.body.swipeData, section.CourseId, function(uin) {
+        if (!allowed) return res.status(403).end();
+        parseSwipe(req.body.swipeData, section.courseId, function(uin) {
             if (!uin) return res.status(400).end();
-            section.hasUser(req.user, function(err, result) {
-                if (!result) return res.status(403).end();
-                db.Checkin.findOrCreate({
-                    SectionId: req.params.id,
+            db.Checkin.findOrCreate({
+                where: {
+                    sectionId: req.params.id,
                     uin: uin
-                }, {
-                    UserId: req.user.id
-                })
-                .success(function(checkin, created) {
-                    if (!created) return res.status(409).send(checkin);
-                    checkin = checkin.values;
-                    db.Student.find({
-                        where: {
-                            CourseId: section.CourseId,
-                            uin: checkin.uin
-                        }
-                    })
-                    .success(function(student) {
-                        if (student) {
-                            checkin.netid = student.netid;
-                            checkin.fullName = student.fullName;
-                        } else {
-                            checkin.netid = '';
-                            checkin.fullName = '';
-                        }
-                        res.send(checkin);
-                    });
+                },
+                defaults: {userId: req.user.id}
+            }).spread(function(checkin, created) {
+                checkin = checkin.get();
+                if (!created) return res.status(409).send(checkin);
+                db.Student.find({
+                    where: {
+                        courseId: section.courseId,
+                        uin: checkin.uin
+                    }
+                }).then(function(student) {
+                    if (student) {
+                        checkin.netid = student.netid;
+                        checkin.fullName = student.fullName;
+                    } else {
+                        checkin.netid = '';
+                        checkin.fullName = '';
+                    }
+                    res.send(checkin);
                 });
             });
         });
@@ -157,89 +137,79 @@ router.post('/:id/checkins', function(req, res) {
 });
 
 router.get('/:id/comments', function(req, res) {
-    db.Section.find({
+    db.Section.findForUser({
         where: {id: req.params.id}
-    })
-    .success(function(section) {
+    }, req.user).spread(function(section, allowed) {
         if (!section) return res.status(404).end();
-        section.hasUser(req.user, function(err, result) {
-            if (!result) return res.status(403).end();
-            section.getComments({
-                include: [db.User]
-            })
-            .success(function(comments) {
-                res.send({comments: comments});
-            });
+        if (!allowed) return res.status(403).end();
+        section.getComments({
+            include: [db.User]
+        }).then(function(comments) {
+            res.send({comments: comments});
         });
     });
 });
 
 router.post('/:id/comments', function(req, res) {
     if (!req.body.text) return res.status(400).end();
-    db.Section.find({
+    db.Section.findForUser({
         where: {id: req.params.id}
-    })
-    .success(function(section) {
+    }, req.user).spread(function(section, allowed) {
         if (!section) return res.status(404).end();
-        section.hasUser(req.user, function(err, result) {
-            if (!result) return res.status(403).end();
-            db.Comment.create({
-                UserId: req.user.id,
-                SectionId: section.id,
-                text: req.body.text
-            })
-            .success(function(comment) {
-                res.send(_.assign({
-                    user: req.user
-                }, comment.dataValues));
-            });
+        if (!allowed) return res.status(403).end();
+        db.Comment.create({
+            userId: req.user.id,
+            sectionId: section.id,
+            text: req.body.text
+        }).then(function(comment) {
+            res.send(_.assign({
+                user: req.user
+            }, comment.dataValues));
         });
     });
 });
 
 router.get('/:id/students/:uin/photo.jpg', function(req, res) {
-    var id = req.params.id;
-    db.Section.find({
+    db.Section.findForUser({
         where: {id: req.params.id}
-    })
-    .success(function(section) {
+    }, req.user).spread(function(section, allowed) {
         if (!section) return res.status(404).end();
-        section.hasUser(req.user, function(err, result) {
-            if (!result) return res.status(403).end();
-            var uin = req.params.uin;
-            db.Student.find({
-                where: {CourseId: section.CourseId, uin: uin}
-            })
-            .success(function(student) {
-                // Do not return ID photo if student is not in the roster
-                if (!student) {
+        if (!allowed) return res.status(403).end();
+        var uin = req.params.uin;
+        db.Student.find({
+            where: {
+                courseId: section.courseId,
+                uin: uin
+            }
+        }).then(function(student) {
+            // Do not return ID photo if student is not in the roster
+            if (!student) {
+                return res.sendFile('no_photo.jpg', {
+                    root: path.join(__dirname, '../public/')
+                });
+            }
+
+            // Use locally stored photos
+            res.sendFile(uin + '.jpg', {
+                root: path.join(__dirname, '../photos')
+            }, function(err) {
+                if (err) {
                     return res.sendFile('no_photo.jpg', {
                         root: path.join(__dirname, '../public/')
                     });
                 }
-
-                // Use locally stored photos
-                return res.sendFile(uin + '.jpg', {
-                    root: path.join(__dirname, '../photos')
-                }, function(err) {
-                    if (err) {
-                        return res.sendFile('no_photo.jpg', {
-                            root: path.join(__dirname, '../public/')
-                        });
-                    }
-                });
-
-                //fetchIDPhoto(uin, function(error, response, body) {
-                    //if (response.headers['content-type'] !== 'image/jpeg') {
-                        //// Session cookie is not valid
-                        //return res.sendFile('no_photo.jpg', {
-                            //root: path.join(__dirname, '../public/')
-                        //});
-                    //}
-                    //res.type('image/jpeg');
-                    //res.send(body);
-                //});
             });
+
+            //fetchIDPhoto(uin, function(error, response, body) {
+                //if (response.headers['content-type'] !== 'image/jpeg') {
+                    //// Session cookie is not valid
+                    //return res.sendFile('no_photo.jpg', {
+                        //root: path.join(__dirname, '../public/')
+                    //});
+                //}
+                //res.type('image/jpeg');
+                //res.send(body);
+            //});
         });
     });
 });

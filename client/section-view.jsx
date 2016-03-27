@@ -118,7 +118,7 @@ var SectionView = React.createClass({
                 </Modal.Footer>
             </Modal>
             <a
-                href={baseUrl + '/courses/' + this.state.section.CourseId}
+                href={baseUrl + '/courses/' + this.state.section.courseId}
                 onClick={this.props.handleNav}>
                 &laquo; Back to course
             </a>

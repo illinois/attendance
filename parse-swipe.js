@@ -29,8 +29,7 @@ var extractUIN = function(swipeData) {
 var getUINfromNetID = function(swipeData, courseId, callback) {
     db.Student.find({
         where: {CourseId: courseId, netid: swipeData}
-    })
-    .success(function(student) {
+    }).then(function(student) {
         if (student) {
             callback(student.uin);
         } else {

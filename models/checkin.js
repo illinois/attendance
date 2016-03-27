@@ -1,7 +1,7 @@
 module.exports = function(sequelize, DataTypes) {
-    var Checkin = sequelize.define('Checkin', {
+    var Checkin = sequelize.define('checkin', {
         uin: {type: DataTypes.STRING, unique: 'compositeIndex'},
-        SectionId: {type: DataTypes.INTEGER, unique: 'compositeIndex'}
+        sectionId: {type: DataTypes.INTEGER, unique: 'compositeIndex'}
     }, {
         classMethods: {
             associate: function(models) {

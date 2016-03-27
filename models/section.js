@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-    var Section = sequelize.define('Section', {
+    var Section = sequelize.define('section', {
         name: DataTypes.STRING
     }, {
         classMethods: {
@@ -7,23 +7,27 @@ module.exports = function(sequelize, DataTypes) {
                 Section.belongsTo(models.Course);
                 Section.hasMany(models.Checkin);
                 Section.hasMany(models.Comment);
+            },
+            /**
+             * Find the section and check whether the user is allowed to view
+             * the course the section belongs to. Returns two arguments:
+             *   - section: Section object or null if not found
+             *   - allowed: Whether or not user is allowed to view the course
+             */
+            findForUser: function(options, user) {
+                return Section.find(options).then(function(section) {
+                    return [section, section ? section.hasUser(user) : null];
+                });
             }
         },
         instanceMethods: {
             /**
              * Checks if the given user has permission to view the course this
              * section belongs to.
-             *
-             * Parameters:
-             *   user: User instance
-             *   done: function(err, result)
-             *     - result: true if user has access to the course this
-             *       section belongs to, false otherwise.
              */
-            hasUser: function(user, done) {
-                this.getCourse()
-                .success(function(course) {
-                    course.hasUser(user).done(done);
+            hasUser: function(user) {
+                return this.getCourse().then(function(course) {
+                    return course.hasUser(user);
                 });
             }
         }

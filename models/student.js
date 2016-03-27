@@ -1,6 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
-    var Student = sequelize.define('Student', {
-        CourseId: {type: DataTypes.INTEGER, unique: 'compositeIndex'},
+    var Student = sequelize.define('student', {
+        courseId: {type: DataTypes.INTEGER, unique: 'compositeIndex'},
         uin: {type: DataTypes.STRING, unique: 'compositeIndex'},
         netid: DataTypes.STRING,
         firstName: DataTypes.STRING,

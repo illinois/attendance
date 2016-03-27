@@ -1,13 +1,13 @@
 var ldap = require('ldapjs');
 
 module.exports = function(sequelize, DataTypes) {
-    var User = sequelize.define('User', {
+    var User = sequelize.define('user', {
         netid: {type: DataTypes.STRING, unique: true},
         name: DataTypes.STRING
     }, {
         classMethods: {
             associate: function(models) {
-                User.hasMany(models.Course);
+                User.belongsToMany(models.Course, {through: 'staff'});
                 User.hasMany(models.Checkin);
             }
         },
@@ -43,9 +43,8 @@ module.exports = function(sequelize, DataTypes) {
             }
         },
         hooks: {
-            afterCreate: function(user, fn) {
+            afterCreate: function(user) {
                 user.getNameFromLDAP();
-                fn(null, user);
             }
         }
     });

@@ -5,38 +5,33 @@ var _ = require('lodash');
 
 /**
  * Import roster in the format of My.CS Portal's "Export to Excel".
- *
- * callback: function(int n) where n is the number of students added.
  */
-var importRoster = function(roster, courseId, callback) {
+var importRoster = function(roster, courseId) {
     $ = cheerio.load(roster);
-    var students = [];
 
-    $('tbody tr').each(function() {
+    var students = $('tbody tr').map(function() {
         var row = $(this).children('td');
-        students.push({
-            CourseId: courseId,
+        return {
+            courseId: courseId,
             uin: row.eq(1).text(),
             netid: row.eq(0).text(),
             firstName: row.eq(4).text(),
             lastName: row.eq(3).text()
-        });
+        };
     });
 
     students = _.uniqBy(students, 'uin');
 
     // Don't delete existing records if no students were found in case user
     // uploaded the wrong file.
-    if (students.length === 0) return callback(null);
+    if (students.length === 0) return [0, null];
 
-    db.Student.destroy({CourseId: courseId})
-    .then(function() {
-        db.Student.bulkCreate(students).success(function(result) {
-            callback({
-                count: result.length,
-                lastUpdated: result[0].updatedAt
-            });
-        });
+    return db.Student.destroy({
+        where: {CourseId: courseId}
+    }).then(function() {
+        return db.Student.bulkCreate(students);
+    }).then(function(result) {
+        return [result.length, result[0].updatedAt];
     });
 };
 
