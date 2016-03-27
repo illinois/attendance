@@ -31,7 +31,7 @@ var writeCSV = function(checkins, res) {
             checkin.netid || '',
             checkin.timestamp.toISOString()
         ]);
-        callback();
+        setImmediate(callback);
     }, function() {
         stringifier.end();
     });
