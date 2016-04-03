@@ -13,10 +13,10 @@ module.exports = function(sequelize, DataTypes) {
         },
         instanceMethods: {
             /**
-             * Get user's full name from Campus LDAP in the background and save
-             * it to the instance.
+             * Get user's full name from Campus LDAP and save it to the
+             * instance.
              */
-            getNameFromLDAP: function() {
+            getNameFromLDAP: function(callback) {
                 var client = ldap.createClient({
                     url: 'ldap://ldap.uiuc.edu:389'
                 });
@@ -27,13 +27,16 @@ module.exports = function(sequelize, DataTypes) {
                     sizeLimit: 1
                 };
                 client.search(base, opts, function(err, res) {
-                    if (err) return;
+                    if (err) return callback(err);
                     res.on('searchEntry', function(entry) {
                         this.updateAttributes({
                             name: (entry.object.uiucEduFirstName + ' ' +
                                    entry.object.uiucEduLastName)
                         });
                     }.bind(this));
+                    res.on('end', function() {
+                        callback(null);
+                    });
                 }.bind(this));
             }
         },
@@ -43,8 +46,14 @@ module.exports = function(sequelize, DataTypes) {
             }
         },
         hooks: {
-            afterCreate: function(user) {
-                user.getNameFromLDAP();
+            afterCreate: function(user, options, callback) {
+                // Skip name lookup if testing because Travis CI is not on the
+                // campus network
+                if (process.env.NODE_ENV === 'test') {
+                    return callback(null);
+                }
+
+                user.getNameFromLDAP(callback);
             }
         }
     });
