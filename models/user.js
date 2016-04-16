@@ -18,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
              */
             getNameFromLDAP: function(callback) {
                 var client = ldap.createClient({
-                    url: 'ldap://ldap.uiuc.edu:389'
+                    url: 'ldaps://ldap.illinois.edu:636'
                 });
                 var base = 'dc=uiuc,dc=edu';
                 var opts = {
