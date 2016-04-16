@@ -12,12 +12,6 @@ var getAuthenticatedUser = function(netid, callback) {
     db.User.findOrCreate({
         where: {netid: netid}
     }).spread(function(user, created) {
-        // If the user was just created, don't call getNameFromLDAP()
-        // because it has already been called by User's afterCreate
-        // hook.
-        if (!created && !user.name) {
-            user.getNameFromLDAP();
-        }
         callback(null, user);
     });
 };
