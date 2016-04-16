@@ -1,5 +1,7 @@
 var ldap = require('ldapjs');
 
+var config = require('../config');
+
 module.exports = function(sequelize, DataTypes) {
     var User = sequelize.define('user', {
         netid: {type: DataTypes.STRING, unique: true},
@@ -49,7 +51,8 @@ module.exports = function(sequelize, DataTypes) {
             afterCreate: function(user, options, callback) {
                 // Skip name lookup if testing because Travis CI is not on the
                 // campus network
-                if (process.env.NODE_ENV === 'test') {
+                if (!config.authenticationEnabled ||
+                    process.env.NODE_ENV === 'test') {
                     return callback(null);
                 }
 

@@ -2,6 +2,9 @@ var config = {};
 
 config.port = 4000;
 config.sessionSecret = 'not secret';
+
+// Set to false if the server is not on the campus network
+// This will disable AD authentication and LDAP name lookup
 config.authenticationEnabled = true;
 
 config.db = {
