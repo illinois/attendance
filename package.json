@@ -42,7 +42,7 @@
         "react-dom": "0.14.x",
         "reactify": "1.1.x",
         "request": "2.69.x",
-        "sequelize": "git://github.com/sequelize/sequelize.git#1746048f68cd8e41c977725e6aefd06f034b66c0",
+        "sequelize": "3.22.x",
         "sequelize-cli": "2.3.x",
         "uglify-js": "2.4.x",
         "watchify": "1.0.x"
