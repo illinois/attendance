@@ -27,7 +27,7 @@ var importRoster = function(roster, courseId) {
     if (students.length === 0) return [0, null];
 
     return db.Student.destroy({
-        where: {CourseId: courseId}
+        where: {courseId: courseId}
     }).then(function() {
         return db.Student.bulkCreate(students);
     }).then(function(result) {

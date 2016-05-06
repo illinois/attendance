@@ -90,7 +90,7 @@ router.get('/:id/roster', function(req, res) {
         if (!course) return res.status(404).end();
         if (!allowed) return res.status(403).end();
         db.Student.findAndCountAll({
-            where: {CourseId: req.params.id},
+            where: {courseId: req.params.id},
             limit: 1
         }).then(function(result) {
             var count = result.count;
@@ -169,11 +169,11 @@ router.get('/:id/checkins', function(req, res) {
             if (!course) return res.status(404).end();
             if (!allowed) return res.status(403).end();
             db.Checkin.findAll({
-                where: {
-                    uin: uin,
-                    'Section.CourseId': req.params.id
-                },
-                include: [db.Section]
+                where: {uin: uin},
+                include: [{
+                    model: db.Section,
+                    where: {courseId: req.params.id}
+                }]
             }).then(function(checkins) {
                 res.send({checkins: checkins});
             });
