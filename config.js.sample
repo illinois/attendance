@@ -7,6 +7,9 @@ config.sessionSecret = 'not secret';
 // This will disable AD authentication and LDAP name lookup
 config.authenticationEnabled = true;
 
+// Set to false to disable sending of emails
+config.emailEnabled = true;
+
 config.db = {
     development: {
         host: 'localhost',

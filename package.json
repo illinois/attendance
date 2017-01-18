@@ -33,6 +33,7 @@
         "moment": "2.8.x",
         "multer": "1.0.x",
         "mysql": "2.4.x",
+        "nodemailer": "2.7.x",
         "nodemon": "1.2.x",
         "passport": "0.2.x",
         "passport-local": "1.0.x",

@@ -8,6 +8,7 @@ var db = require('../models');
 var parseSwipe = require('../parse-swipe');
 var fetchIDPhoto = require('../fetch-id-photo');
 var writeCSV = require('../write-csv');
+var email = require('../email');
 
 router.use(require('../middleware/require-auth'));
 
@@ -125,6 +126,7 @@ router.post('/:id/checkins', function(req, res) {
                     if (student) {
                         checkin.netid = student.netid;
                         checkin.fullName = student.fullName;
+                        email.sendConfirmationEmail(checkin);
                     } else {
                         checkin.netid = '';
                         checkin.fullName = '';
