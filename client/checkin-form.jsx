@@ -90,16 +90,16 @@ var CheckinForm = React.createClass({
     render: function() {
         var alert = null;
         if (this.state.message) {
-            var secretWord = null;
+            var sw = null;
             if (this.state.errorSwipe && this.state.errorSwipe.secretWord) {
-                secretWord = <div>
+                sw = <div>
                     <p>Your secret word was:</p>
                     <div className="secret-word">{this.state.errorSwipe.secretWord}</div>
                 </div>;
             }
             alert = <div className="alert alert-danger" role="alert">
                 <p>{this.state.message}</p>
-                {secretWord}
+                {sw}
             </div>;
         }
 
