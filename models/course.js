@@ -1,7 +1,8 @@
 module.exports = function(sequelize, DataTypes) {
     var Course = sequelize.define('course', {
         name: DataTypes.STRING,
-        isArchived: {type: DataTypes.BOOLEAN, defaultValue: false}
+        isArchived: {type: DataTypes.BOOLEAN, defaultValue: false},
+        enableSecretWords: {type: DataTypes.BOOLEAN, defaultValue: false}
     }, {
         classMethods: {
             associate: function(models) {

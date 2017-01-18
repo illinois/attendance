@@ -2,4 +2,10 @@ Hello <%= student.firstName %>,
 
 You have successfully checked into <%= checkin.section.course.name %> - <%= checkin.section.name %> at <%= checkinTime %>.
 
+<% if (checkin.secretWord) { -%>
+Your secret word is: <%= checkin.secretWord %>
+
+If applicable, you must begin your quiz within 10 minutes of checking in to receive credit.
+
+<% } -%>
 Please contact your course staff if you have any questions. You were checked in by <%= checkin.user.name %> (<%= checkin.user.netid %>@illinois.edu).

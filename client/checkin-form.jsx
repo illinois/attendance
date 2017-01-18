@@ -19,7 +19,8 @@ var CheckinForm = React.createClass({
         return {
             swipeData: '',
             lastSwipes: [],
-            message: ''
+            message: '',
+            errorSwipe: null
         };
     },
 
@@ -65,7 +66,8 @@ var CheckinForm = React.createClass({
             this.setState({
                 swipeData: '',
                 lastSwipes: newLastSwipes,
-                message: ''
+                message: '',
+                errorSwipe: null
             });
         }.bind(this))
         .fail(function(xhr) {
@@ -79,7 +81,8 @@ var CheckinForm = React.createClass({
             }
             this.setState({
                 swipeData: '',
-                message: message
+                message: message,
+                errorSwipe: xhr.responseJSON
             });
         }.bind(this));
     },
@@ -87,8 +90,24 @@ var CheckinForm = React.createClass({
     render: function() {
         var alert = null;
         if (this.state.message) {
+            var secretWord = null;
+            if (this.state.errorSwipe && this.state.errorSwipe.secretWord) {
+                secretWord = <div>
+                    <p>Your secret word was:</p>
+                    <div className="secret-word">{this.state.errorSwipe.secretWord}</div>
+                </div>;
+            }
             alert = <div className="alert alert-danger" role="alert">
-                {this.state.message}
+                <p>{this.state.message}</p>
+                {secretWord}
+            </div>;
+        }
+
+        var secretWord = null;
+        if (!this.state.errorSwipe && this.state.lastSwipes.length > 0 && this.state.lastSwipes[0].secretWord) {
+            secretWord = <div className="alert alert-info" role="alert">
+                <p>Your secret word is:</p>
+                <div className="secret-word">{this.state.lastSwipes[0].secretWord}</div>
             </div>;
         }
 
@@ -122,6 +141,7 @@ var CheckinForm = React.createClass({
                             Swipe i-card or enter UIN/NetID
                         </legend>
                         {alert}
+                        {secretWord}
                         <form
                             onSubmit={this.handleSubmit}
                             autoComplete="off">

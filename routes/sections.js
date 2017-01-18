@@ -9,6 +9,7 @@ var parseSwipe = require('../parse-swipe');
 var fetchIDPhoto = require('../fetch-id-photo');
 var writeCSV = require('../write-csv');
 var email = require('../email');
+var secretWord = require('../secret-word');
 
 router.use(require('../middleware/require-auth'));
 
@@ -81,7 +82,8 @@ router.get('/:id/checkins.csv', function(req, res) {
         if (!allowed) return res.status(403).end();
         var query = (
             'SELECT sections.name AS sectionName, checkins.uin, ' +
-            'students.netid, checkins.createdAt AS timestamp ' +
+            'students.netid, checkins.createdAt AS timestamp, ' +
+            'checkins.secretWord ' +
             'FROM checkins ' +
             'JOIN sections ON checkins.sectionId = sections.id ' +
             'LEFT JOIN students ON ' +
@@ -102,7 +104,8 @@ router.get('/:id/checkins.csv', function(req, res) {
 router.post('/:id/checkins', function(req, res) {
     if (!req.body.swipeData) return res.status(400).end();
     db.Section.findForUser({
-        where: {id: req.params.id}
+        where: {id: req.params.id},
+        include: [db.Course]
     }, req.user).spread(function(section, allowed) {
         if (!section) return res.status(404).end();
         if (!allowed) return res.status(403).end();
@@ -113,7 +116,10 @@ router.post('/:id/checkins', function(req, res) {
                     sectionId: req.params.id,
                     uin: uin
                 },
-                defaults: {userId: req.user.id}
+                defaults: {
+                    userId: req.user.id,
+                    secretWord: section.course.enableSecretWords ? secretWord() : null
+                }
             }).spread(function(checkin, created) {
                 checkin = checkin.get();
                 if (!created) return res.status(409).send(checkin);

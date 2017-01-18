@@ -189,7 +189,8 @@ router.get('/:id/checkins.csv', function(req, res) {
         if (!allowed) return res.status(403).end();
         var query = (
             'SELECT sections.name AS sectionName, checkins.uin, ' +
-            'students.netid, checkins.createdAt AS timestamp ' +
+            'students.netid, checkins.createdAt AS timestamp, ' +
+            'checkins.secretWord ' +
             'FROM checkins ' +
             'JOIN sections ON checkins.sectionId = sections.id ' +
             'JOIN courses ON sections.courseId = courses.id ' +

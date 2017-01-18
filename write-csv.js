@@ -20,7 +20,7 @@ var writeCSV = function(checkins, res) {
     });
 
     // Write header to stringifier
-    var header = ['section_name', 'uin', 'netid', 'timestamp'];
+    var header = ['section_name', 'uin', 'netid', 'timestamp', 'secret_word'];
     stringifier.write(header);
 
     // Write checkins to stringifier
@@ -29,7 +29,8 @@ var writeCSV = function(checkins, res) {
             checkin.sectionName,
             checkin.uin,
             checkin.netid || '',
-            checkin.timestamp.toISOString()
+            checkin.timestamp.toISOString(),
+            checkin.secretWord
         ]);
         setImmediate(callback);
     }, function() {

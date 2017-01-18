@@ -18,6 +18,13 @@
     max-height: 150px;
 }
 
+.secret-word {
+    font-weight: bold;
+    font-size: 40px;
+    font-family: monospace;
+    text-align: center;
+}
+
 /* Last swipes */
 .swipe-timestamp {
     color: #aaa;
