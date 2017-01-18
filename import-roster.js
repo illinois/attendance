@@ -15,8 +15,8 @@ var importRoster = function(roster, courseId) {
             courseId: courseId,
             uin: row.eq(1).text(),
             netid: row.eq(0).text(),
-            firstName: row.eq(4).text(),
-            lastName: row.eq(3).text()
+            firstName: row.eq(5).text(),
+            lastName: row.eq(4).text()
         };
     });
 
