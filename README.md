@@ -1,6 +1,6 @@
 Attendance
 ==========
-[![Build Status](https://travis-ci.org/kevinwang/attendance.svg?branch=master)](https://travis-ci.org/kevinwang/attendance)
+[![Build Status](https://travis-ci.org/illinois/attendance.svg?branch=master)](https://travis-ci.org/illinois/attendance)
 
 Card swipe-based attendance app for CS 225 lab sections.
 
