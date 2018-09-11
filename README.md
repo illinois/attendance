@@ -1,26 +1,34 @@
-Attendance
-==========
+# Attendance
 [![Build Status](https://travis-ci.org/illinois/attendance.svg?branch=master)](https://travis-ci.org/illinois/attendance)
 
 Card swipe-based attendance app for CS 225 lab sections.
 
-Setup instructions
-------------------
+## Setup instructions
+
 ```bash
 npm install
 cp config.js.sample config.js
 # Set up config.js
-make serve
+npm run build
+npm run start
 ```
 
-Testing
--------
-```
-make test
+## Running in dev mode
+
+You can have the app automatically recompile its assets in "watch" mode as you edit files.
+
+```bash
+npm run dev
 ```
 
-Linting
--------
+## Testing
+
+```bash
+npm run test
 ```
-make lint
+
+## Linting
+
+```bash
+npm run lint
 ```
