@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var MySQLStore = require('connect-mysql')(session);
+var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var path = require('path');
 
 var baseUrl = require('./baseurl');
@@ -10,29 +10,22 @@ var passport = require('./authentication');
 var db = require('./models');
 var fetchIDPhoto = require('./fetch-id-photo');
 
-var NODE_ENV = process.env.NODE_ENV || 'development';
-
 var app = express();
 var router = express.Router();
 
 app.set('view engine', 'ejs');
 app.use(baseUrl, express.static(path.join(__dirname, '/public')));
 
-var dbConfig = config.db[NODE_ENV];
+const sessionStore = new SequelizeStore({
+    db: db.sequelize,
+});
 app.use(session({
-    store: new MySQLStore({
-        config: {
-            host: dbConfig.host,
-            database: dbConfig.database,
-            user: dbConfig.username,
-            password: dbConfig.password,
-            socketPath: dbConfig.socketPath
-        }
-    }),
+    store: sessionStore,
     secret: config.sessionSecret,
     resave: true,
     saveUninitialized: true
 }));
+sessionStore.sync();
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(passport.initialize());

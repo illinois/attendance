@@ -12,6 +12,7 @@ var writeCSV = require('../write-csv');
 router.use(require('../middleware/require-auth'));
 
 router.get('/', function(req, res) {
+    console.log(req.user);
     req.user.getCourses().then(function(courses) {
         res.send({courses: courses});
     });

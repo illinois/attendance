@@ -8,6 +8,7 @@ var config = require('../config');
 var NODE_ENV = process.env.NODE_ENV || 'development';
 
 var dbConfig = config.db[NODE_ENV];
+console.log(dbConfig);
 var sequelize = new Sequelize(
     dbConfig.database,
     dbConfig.username,
@@ -15,10 +16,8 @@ var sequelize = new Sequelize(
     {
         host: dbConfig.host,
         logging: dbConfig.logging,
-        dialectOptions: {
-            socketPath: dbConfig.socketPath
-        }
-    }
+        dialect: dbConfig.dialect,
+    },
 );
 var db = {};
 

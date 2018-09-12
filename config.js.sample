@@ -16,24 +16,24 @@ config.db = {
         database: 'attendance',
         username: 'root',
         password: null,
-        socketPath: null,
-        logging: console.log
+        logging: console.log,
+        dialect: 'mysql',
     },
     production: {
         host: 'localhost',
         database: 'attendance',
         username: 'root',
         password: null,
-        socketPath: null,
-        logging: false
+        logging: false,
+        dialect: 'mysql',
     },
     test: {
         host: 'localhost',
         database: 'attendance_test',
         username: 'root',
         password: null,
-        socketPath: null,
-        logging: false
+        logging: false,
+        dialect: 'mysql',
     },
 };
 

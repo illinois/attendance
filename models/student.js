@@ -6,16 +6,15 @@ module.exports = function(sequelize, DataTypes) {
         firstName: DataTypes.STRING,
         lastName: DataTypes.STRING
     }, {
-        classMethods: {
-            associate: function(models) {
-                Student.belongsTo(models.Course);
-            }
-        },
         getterMethods: {
             fullName: function() {
                 return this.firstName + ' ' + this.lastName;
             }
         }
     });
+    Student.associate = function(models) {
+        Student.belongsTo(models.Course);
+    };
+
     return Student;
 };

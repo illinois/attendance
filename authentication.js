@@ -16,9 +16,16 @@ var getAuthenticatedUser = function(netid, callback) {
         // because it has already been called by User's afterCreate
         // hook.
         if (!created && !user.name) {
-            user.getNameFromLDAP();
+            user.getNameFromLDAP((err) => {
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, user);
+                }
+            });
+        } else {
+            callback(null, user);
         }
-        callback(null, user);
     });
 };
 
