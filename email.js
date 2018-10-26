@@ -5,11 +5,7 @@ var nodemailer = require('nodemailer');
 var config = require('./config');
 var db = require('./models');
 
-var transporter = nodemailer.createTransport({
-    direct: true
-});
-
-var defaultFrom = '"Chara Attendance" <no-reply@illinois.edu>';
+var transporter = nodemailer.createTransport(config.smtp, config.mailDefaults);
 
 exports.sendConfirmationEmail = function(checkin) {
     if (!config.emailEnabled) return;
@@ -33,7 +29,6 @@ exports.sendConfirmationEmail = function(checkin) {
             }, function(err, text) {
                 if (err) return;
                 transporter.sendMail({
-                    from: defaultFrom,
                     to: student.netid + '@illinois.edu',
                     subject: 'Attendance: ' + checkin.section.course.name + ' - ' + checkin.section.name,
                     text: text

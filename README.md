@@ -13,6 +13,8 @@ npm run build
 npm run start
 ```
 
+When hosted on a server within the Illinois campus network, the email configuration in [illinois-config.js](illinois-config.js) can be used to send confirmation emails through [Technology Services' outbound relays](https://answers.uillinois.edu/illinois/page.php?id=47888).
+
 ## Running in dev mode
 
 You can have the app automatically recompile its assets in "watch" mode as you edit files.
