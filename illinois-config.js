@@ -8,14 +8,14 @@ config.sessionSecret = 'not secret';
 config.authenticationEnabled = true;
 
 // Set to false to disable sending of emails
-config.emailEnabled = false;
+config.emailEnabled = true;
 config.smtp = {
-    host: 'smtp.server.name',
+    host: 'outbound-relays.techservices.illinois.edu',
     port: 25,
     secure: false
 }
 config.mailDefaults = {
-    from: '"Attendance" <no-reply@no.reply>'
+    from: '"Attendance" <no-reply@illinois.edu>'
 }
 
 config.db = {
